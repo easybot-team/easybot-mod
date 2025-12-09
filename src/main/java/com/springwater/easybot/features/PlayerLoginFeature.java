@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 
+import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
 
 public class PlayerLoginFeature implements IEasyBotFeatures {
@@ -23,8 +24,8 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
                 var profile = ((ServerLoginNetworkHandlerAccessor) handler).getGameProfile();
                 var name = GameProfileUtils.getName(profile);
                 var uuid = GameProfileUtils.getUuid(profile);
-                var ip = ((ServerLoginNetworkHandlerAccessor) handler).GetConnection().getRemoteAddress().toString();
-                EasyBotFabric.getBridgeClient().reportPlayer(name, uuid, ip);
+                var remoteAddress = (InetSocketAddress)((ServerLoginNetworkHandlerAccessor) handler).GetConnection().getRemoteAddress();
+                EasyBotFabric.getBridgeClient().reportPlayer(name, uuid, remoteAddress.getHostName());
                 try {
                     var resp = EasyBotFabric.getBridgeClient().login(name, uuid);
                     if (resp.getKick()) {

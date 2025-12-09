@@ -2,8 +2,11 @@ package com.springwater.easybot.utils;
 
 import com.springwater.easybot.EasyBotFabric;
 import com.springwater.easybot.bridge.packet.PlayerInfoWithRaw;
+import com.springwater.easybot.mixin.ServerLoginNetworkHandlerAccessor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+
+import java.net.InetSocketAddress;
 
 public class PlayerUtils {
     /**
@@ -37,7 +40,8 @@ public class PlayerUtils {
         playerInfo.setName(player.getName().getString());
         playerInfo.setNameRaw(player.getName().getString());
         playerInfo.setUuid(player.getUUID().toString());
-        playerInfo.setIp(player.connection.getRemoteAddress().toString());
+        var remoteAddress = (InetSocketAddress)player.connection.getRemoteAddress();
+        playerInfo.setIp(remoteAddress.getHostName());
 
         if (FloodgateUtils.isFloodgatePlayer(player.getUUID())) {
             var floodgateInfo = FloodgateUtils.getFloodgatePlayerInfo(player.getUUID());
