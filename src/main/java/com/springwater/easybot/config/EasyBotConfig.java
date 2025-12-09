@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -23,13 +24,14 @@ public class EasyBotConfig {
     private Command command = new Command();
     private SkipOptions skipOptions = new SkipOptions();
     private Geyser geyser = new Geyser();
+    private Event event = new Event();
 
     @Getter
     @Setter
     @ToString
     public static class Message {
         private String bindStart = "[!] 绑定开始,请加群12345678输入: \"绑定 #code\" 进行绑定, 请在#time完成绑定!";
-        private String bindSuccess = "[!] 绑定 #account (#name) 成功!";
+        private String bindSuccess = "§f[§a!§f] 绑定§f §a#account §f(§a#name§f) 成功!";
         private String bindFail = "";
         private String syncSuccess = "";
     }
@@ -56,5 +58,13 @@ public class EasyBotConfig {
     @ToString
     public static class Geyser {
         private boolean ignorePrefix = false;
+    }
+    
+    @Getter
+    @Setter
+    @ToString
+    public static class Event{
+        private boolean enableSuccessEvent = false;
+        private List<String> bindSuccess = new ArrayList<>(List.of("say 玩家$player绑定成功,Id=$account,账号名字=$name")); // 这是个默认值
     }
 }

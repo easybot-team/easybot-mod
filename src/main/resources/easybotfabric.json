@@ -5,7 +5,7 @@
   "ignoreError": false,
   "message": {
     "bindStart": "[!] 绑定开始,请加群12345678输入: \"绑定 #code\" 进行绑定, 请在#time完成绑定!",
-    "bindSuccess": "[!] 绑定 #account (#name) 成功!",
+    "bindSuccess": "§f[§a!§f] 绑定§f §a#account §f(§a#name§f) 成功!",
     "bindFail": "",
     "syncSuccess": ""
   },
@@ -20,5 +20,11 @@
   },
   "geyser": {
     "ignorePrefix": false
+  },
+  "event": {
+    "enableSuccessEvent": false,
+    "bindSuccess": [
+      "say 玩家$player绑定成功,Id=$account,账号名字=$name"
+    ]
   }
 }

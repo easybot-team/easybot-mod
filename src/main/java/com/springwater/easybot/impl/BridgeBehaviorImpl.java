@@ -7,6 +7,7 @@ import com.springwater.easybot.bridge.message.Segment;
 import com.springwater.easybot.bridge.message.TextSegment;
 import com.springwater.easybot.bridge.model.PlayerInfo;
 import com.springwater.easybot.bridge.model.ServerInfo;
+import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.utils.LoaderUtils;
 import com.springwater.easybot.utils.PlayerInfoUtils;
 import com.springwater.easybot.utils.PlayerUtils;
@@ -49,8 +50,59 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
     }
 
     @Override
-    public void BindSuccessBroadcast(String s, String s1, String s2) {
+    public void BindSuccessBroadcast(String playerName, String accountId, String accountName) {
+        EasyBotFabric.getServer().execute(() -> {
+            var isDebug = ConfigLoader.get().isDebug();
+            if (!EasyBotFabric.getBridgeClient().isReady()) {
+                // 能走到这里也是十分甚至九分奇怪了, 能在线收到绑定成功消息,但是处理的时候却不在线了,就很奇怪咯
+                EasyBotFabric.LOGGER.warn("玩家{}绑定账号{}({})成功,但当前服务器在处理时掉线 (本次处理为离线处理)", playerName, accountId, accountName);
+            }
 
+
+            if (isDebug) {
+                EasyBotFabric.LOGGER.info("收到通知: {}绑定账号{}({})成功", playerName, accountId, accountName);
+            }
+
+            var bindPlayer = EasyBotFabric.getServer().getPlayerList().getPlayerByName(playerName);
+            if (bindPlayer != null) {
+                // 通知绑定成功的喜报!!
+                bindPlayer.sendSystemMessage(Component.literal(
+                        ConfigLoader.get().getMessage().getBindSuccess()
+                                .replace("&", "§")
+                                .replace("$player", playerName)
+                                .replace("$account", accountId)
+                                .replace("$name", accountName)
+                ));
+            } else if (isDebug) {
+                EasyBotFabric.LOGGER.warn("玩家{}绑定账号{}({})成功,但玩家不在线 (跳过通知)", playerName, accountId, accountName);
+            }
+
+
+            if (!ConfigLoader.get().getEvent().isEnableSuccessEvent()) {
+                if (isDebug) {
+                    EasyBotFabric.LOGGER.warn("玩家{}绑定账号{}({})成功,本服未开启命令执行 跳过流程", playerName, accountId, accountName);
+                }
+                return;
+            }
+
+            if (ConfigLoader.get().getEvent().isEnableSuccessEvent()) {
+                var commands = ConfigLoader.get().getEvent().getBindSuccess();
+                if (isDebug) {
+                    EasyBotFabric.LOGGER.info("玩家{}绑定账号{}({})成功,正在执行命令: {}条", playerName, accountId, accountName, commands.toArray().length);
+                }
+                for (String command : commands) {
+                    COMMAND_IMPL.DispatchCommand(
+                            command
+                                    .replace("&", "§")
+                                    .replace("$player", playerName)
+                                    .replace("$account", accountId)
+                                    .replace("$name", accountName)
+                    );
+                }
+            }
+
+
+        });
     }
 
     @Override
