@@ -39,6 +39,10 @@ repositories {
             password = System.getenv("TOKEN")
         }
     }
+    maven {
+        url = uri("https://maven.nucleoid.xyz/")
+        name = "Nucleoid-Text-Placeholder-Api-Repo"
+    }
 }
 
 dependencies {
@@ -52,6 +56,9 @@ dependencies {
     minecraft("com.mojang:minecraft:${stonecutter.current.version}")
     mappings(loom.officialMojangMappings()) // emm... 为了更好的Forge开发 或许我们可以尝试一下mojangMappings
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
+
+    // TextPlaceholderApi 支持 https://placeholders.pb4.eu/dev/getting-started/
+    modImplementation("eu.pb4:placeholder-api:${property("deps.placeholder_api_version")}")
 
     compileOnly("org.projectlombok:lombok:1.18.32")
     annotationProcessor("org.projectlombok:lombok:1.18.32")

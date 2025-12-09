@@ -8,6 +8,7 @@ import com.springwater.easybot.bridge.message.TextSegment;
 import com.springwater.easybot.bridge.model.PlayerInfo;
 import com.springwater.easybot.bridge.model.ServerInfo;
 import com.springwater.easybot.config.ConfigLoader;
+import com.springwater.easybot.placeholder.PlaceholderApi;
 import com.springwater.easybot.utils.LoaderUtils;
 import com.springwater.easybot.utils.PlayerInfoUtils;
 import com.springwater.easybot.utils.PlayerUtils;
@@ -16,6 +17,7 @@ import net.minecraft.network.chat.MutableComponent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class BridgeBehaviorImpl implements BridgeBehavior {
     private static final CommandImpl COMMAND_IMPL = new CommandImpl();
@@ -26,8 +28,19 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
     }
 
     @Override
-    public String papiQuery(String s, String s1) {
-        return "";
+    public String papiQuery(String playerName, String query) {
+        var future = new CompletableFuture<String>();
+        EasyBotFabric.getServer().execute(() -> {
+            try {
+                var player = EasyBotFabric.getServer().getPlayerList().getPlayerByName(playerName);
+                var resp = PlaceholderApi.replacePlaceholders(query, playerName, player);
+                future.complete(resp);
+            } catch (Exception e) {
+                EasyBotFabric.LOGGER.error("PAPI查询失败: {}", e.getMessage());
+                future.completeExceptionally(e);
+            }
+        });
+        return future.join();
     }
 
     @Override
@@ -66,13 +79,7 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
             var bindPlayer = EasyBotFabric.getServer().getPlayerList().getPlayerByName(playerName);
             if (bindPlayer != null) {
                 // 通知绑定成功的喜报!!
-                bindPlayer.sendSystemMessage(Component.literal(
-                        ConfigLoader.get().getMessage().getBindSuccess()
-                                .replace("&", "§")
-                                .replace("$player", playerName)
-                                .replace("$account", accountId)
-                                .replace("$name", accountName)
-                ));
+                bindPlayer.sendSystemMessage(Component.literal(ConfigLoader.get().getMessage().getBindSuccess().replace("&", "§").replace("$player", playerName).replace("$account", accountId).replace("$name", accountName)));
             } else if (isDebug) {
                 EasyBotFabric.LOGGER.warn("玩家{}绑定账号{}({})成功,但玩家不在线 (跳过通知)", playerName, accountId, accountName);
             }
@@ -91,13 +98,7 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
                     EasyBotFabric.LOGGER.info("玩家{}绑定账号{}({})成功,正在执行命令: {}条", playerName, accountId, accountName, commands.toArray().length);
                 }
                 for (String command : commands) {
-                    COMMAND_IMPL.DispatchCommand(
-                            command
-                                    .replace("&", "§")
-                                    .replace("$player", playerName)
-                                    .replace("$account", accountId)
-                                    .replace("$name", accountName)
-                    );
+                    COMMAND_IMPL.DispatchCommand(command.replace("&", "§").replace("$player", playerName).replace("$account", accountId).replace("$name", accountName));
                 }
             }
 

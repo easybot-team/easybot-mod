@@ -12,5 +12,6 @@ stonecutter parameters {
     swaps["mod_id"] = "\"" + property("mod.id") + "\";"
     swaps["mod_version"] = "\"" + property("mod.version") + "\";"
     swaps["minecraft"] = "\"" + node.metadata.version + "\";"
+    swaps["papi"] = "\"" + node.project.property("deps.placeholder_api_version") + "\";"
     dependencies["fapi"] = node.project.property("deps.fabric_api") as String
 }

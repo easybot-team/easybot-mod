@@ -26,5 +26,8 @@
   "depends": {
     "fabricloader": ">=0.17",
     "minecraft": "${minecraft}"
+  },
+  "suggests": {
+    "text-placeholder-api": ">=2.0.0"
   }
 }

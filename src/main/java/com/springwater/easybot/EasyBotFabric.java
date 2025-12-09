@@ -1,6 +1,7 @@
 package com.springwater.easybot;
 
 import com.springwater.easybot.bridge.BridgeClient;
+import com.springwater.easybot.bridge.ClientProfile;
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.config.EasyBotConfig;
 import com.springwater.easybot.features.*;
@@ -11,6 +12,7 @@ import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
 import lombok.Getter;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,7 @@ public class EasyBotFabric implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final String VERSION = /*$ mod_version*/ "0.1.0"; // 别删前面的注释,删了我打屎你们
     public static final String MINECRAFT = /*$ minecraft*/ "1.21.10";   // 别删前面的注释,删了我打屎你们
+    public static final String PAPI = /*$ papi*/ "";   // 别删前面的注释,删了我打屎你们
 
     @Getter
     private static MinecraftServer server = null;
@@ -64,6 +67,8 @@ public class EasyBotFabric implements ModInitializer {
             LOGGER.warn("=====================================");
             throw new RuntimeException("配置加载失败", e);
         }
+        
+        doDependencyCheck();
 
         // 在启动前设置Logger 不用默认的
         BridgeClient.setLogger(new Slf4jLoggerAdapter(LOGGER));
@@ -109,6 +114,17 @@ public class EasyBotFabric implements ModInitializer {
         resetBridgeClient();
     }
 
+    private static void doDependencyCheck() {
+        LOGGER.info("正在进行依赖检查");
+        if(FabricLoader.getInstance().isModLoaded("placeholder-api")){
+            LOGGER.info("检测到TextPlaceholderAPI 已启动占位符功能");
+            ClientProfile.setPapiSupported(true);
+        }else{
+            LOGGER.warn("未检测到TextPlaceholderAPI 为了您更好的使用体验,建议您安装此MOD: https://modrinth.com/mod/placeholder-api");
+            ClientProfile.setPapiSupported(false);
+        }
+    }
+    
     private static void resetBridgeClient() {
         bridgeClient.setToken(ConfigLoader.get().getToken());
         bridgeClient.resetUrl(ConfigLoader.get().getWs());
