@@ -14,6 +14,7 @@ import com.springwater.easybot.utils.PlayerInfoUtils;
 import com.springwater.easybot.utils.PlayerUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 
@@ -25,8 +26,18 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
     private static final CommandImpl COMMAND_IMPL = new CommandImpl();
 
     @Override
-    public String runCommand(String playerName, String command, boolean enableRcon) {
-        return COMMAND_IMPL.DispatchCommand(command);
+    public String runCommand(String playerName, String command, boolean enablePapi) {
+        CompletableFuture<String> commandFuture = new CompletableFuture<>();
+        EasyBotFabric.getServer().execute(() -> {
+            var finalCommand = command;
+            ServerPlayer serverPlayer = EasyBotFabric.getServer().getPlayerList().getPlayerByName(playerName);
+            if (enablePapi) {
+                finalCommand = PlaceholderApi.replacePlaceholders(command, playerName, serverPlayer);
+            }
+            commandFuture.complete(finalCommand);
+        });
+        var commandToRun = commandFuture.join();
+        return COMMAND_IMPL.DispatchCommandAsync(commandToRun).join();
     }
 
     @Override

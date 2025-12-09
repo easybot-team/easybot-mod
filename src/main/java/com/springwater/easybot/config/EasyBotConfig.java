@@ -40,6 +40,7 @@ public class EasyBotConfig {
     @ToString
     public static class Command {
         private boolean allowBind = true;
+        private int waitTime = 3;
     }
 
     @Getter

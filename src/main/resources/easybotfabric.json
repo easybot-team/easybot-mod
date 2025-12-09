@@ -9,7 +9,8 @@
     "bindFail": "§f[§c!§f] §c绑定失败 #why"
   },
   "command": {
-    "allowBind": true
+    "allowBind": true,
+    "waitTime": 3
   },
   "skipOptions": {
     "skipJoin": false,
