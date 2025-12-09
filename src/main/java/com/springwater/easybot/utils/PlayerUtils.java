@@ -15,7 +15,7 @@ public class PlayerUtils {
     public static void kickPlayerAsync(String name, String reason) {
         EasyBotFabric.getServer().execute(() -> {
             ServerPlayer player = EasyBotFabric.getServer().getPlayerList().getPlayerByName(name);
-            if(player == null){
+            if (player == null) {
                 EasyBotFabric.LOGGER.warn("踢出玩家失败: 玩家{}不存在", name);
                 return;
             }
@@ -31,13 +31,25 @@ public class PlayerUtils {
     public static void kickPlayerSync(ServerPlayer player, String reason) {
         player.connection.disconnect(Component.literal(reason));
     }
-    
+
     public static PlayerInfoWithRaw getPlayerInfo(ServerPlayer player) {
         PlayerInfoWithRaw playerInfo = new PlayerInfoWithRaw();
         playerInfo.setName(player.getName().getString());
         playerInfo.setNameRaw(player.getName().getString());
         playerInfo.setUuid(player.getUUID().toString());
         playerInfo.setIp(player.connection.getRemoteAddress().toString());
+
+        if (FloodgateUtils.isFloodgatePlayer(player.getUUID())) {
+            var floodgateInfo = FloodgateUtils.getFloodgatePlayerInfo(player.getUUID());
+            if (floodgateInfo != null) {
+                playerInfo.setName(floodgateInfo.getPlayerName());
+                playerInfo.setNameRaw(floodgateInfo.getPlayerName());
+                playerInfo.setUuid(floodgateInfo.getPlayerUuid());
+            } else {
+                EasyBotFabric.LOGGER.warn("玩家{}的Floodgate信息获取失败", player.getName().getString());
+            }
+        }
+
         return playerInfo;
     }
 }

@@ -19,7 +19,8 @@
     "skipDeath": false
   },
   "geyser": {
-    "ignorePrefix": false
+    "ignorePrefix": false,
+    "useRealUuid": false
   },
   "event": {
     "enableSuccessEvent": false,

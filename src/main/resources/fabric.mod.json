@@ -28,6 +28,8 @@
     "minecraft": "${minecraft}"
   },
   "suggests": {
-    "text-placeholder-api": ">=2.0.0"
+    "text-placeholder-api": ">=2.0.0",
+    "geyser-fabric": ">=2.2.0-SNAPSHOT",
+    "floodgate": ">=2.2.0-SNAPSHOT"
   }
 }

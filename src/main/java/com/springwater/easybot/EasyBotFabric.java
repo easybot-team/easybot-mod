@@ -122,6 +122,17 @@ public class EasyBotFabric implements ModInitializer {
             LOGGER.warn("未检测到TextPlaceholderAPI 为了您更好的使用体验,建议您安装此MOD: https://modrinth.com/mod/placeholder-api");
             ClientProfile.setPapiSupported(false);
         }
+
+
+        if (FabricLoader.getInstance().isModLoaded("geyser-fabric")) {
+            LOGGER.info("检测到Geyser 已启动Geyser兼容功能");
+            ClientProfile.setHasGeyser(true);
+        }
+
+        if (FabricLoader.getInstance().isModLoaded("floodgate")) {
+            LOGGER.info("检测到Floodgate 已启动Floodgate兼容功能");
+            ClientProfile.setHasFloodgate(true);
+        }
     }
 
     private static void resetBridgeClient() {

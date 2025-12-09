@@ -58,6 +58,7 @@ public class EasyBotConfig {
     @ToString
     public static class Geyser {
         private boolean ignorePrefix = false;
+        private boolean useRealUuid = false;
     }
     
     @Getter

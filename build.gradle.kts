@@ -60,6 +60,8 @@ dependencies {
     // TextPlaceholderApi 支持 https://placeholders.pb4.eu/dev/getting-started/
     modImplementation("eu.pb4:placeholder-api:${property("deps.placeholder_api_version")}")
 
+    compileOnly("maven.modrinth:floodgate:${property("deps.floodgate_version")}")
+
     compileOnly("org.projectlombok:lombok:1.18.32")
     annotationProcessor("org.projectlombok:lombok:1.18.32")
 

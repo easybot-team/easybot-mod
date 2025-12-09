@@ -13,7 +13,9 @@ public class PlayerInfoUtils {
             playerInfo.setPlayerUuid(player.getUUID().toString());
             playerInfo.setIp(player.connection.getRemoteAddress().toString());
             playerInfo.setSkinUrl(SkinUtils.getSkinUrl(player));
-            playerInfo.setBedrock(false); // TODO: 间歇泉
+            playerInfo.setBedrock(
+                    FloodgateUtils.isFloodgatePlayer(player.getUUID())
+            );
             return playerInfo;
         }).toList();
     }
