@@ -14,6 +14,8 @@ import com.springwater.easybot.utils.PlayerInfoUtils;
 import com.springwater.easybot.utils.PlayerUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,8 +80,22 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
 
             var bindPlayer = EasyBotFabric.getServer().getPlayerList().getPlayerByName(playerName);
             if (bindPlayer != null) {
+                bindPlayer.playNotifySound(
+                        SoundEvents.PLAYER_LEVELUP,
+                        SoundSource.MASTER,
+                        1.0f,
+                        1.0f
+                );
                 // 通知绑定成功的喜报!!
-                bindPlayer.sendSystemMessage(Component.literal(ConfigLoader.get().getMessage().getBindSuccess().replace("&", "§").replace("$player", playerName).replace("$account", accountId).replace("$name", accountName)));
+                bindPlayer.sendSystemMessage(
+                        Component.literal(
+                                ConfigLoader.get().getMessage().getBindSuccess()
+                                        .replace("&", "§")
+                                        .replace("#player", playerName)
+                                        .replace("#account", accountId)
+                                        .replace("#name", accountName)
+                        )
+                );
             } else if (isDebug) {
                 EasyBotFabric.LOGGER.warn("玩家{}绑定账号{}({})成功,但玩家不在线 (跳过通知)", playerName, accountId, accountName);
             }

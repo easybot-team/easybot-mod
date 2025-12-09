@@ -4,10 +4,9 @@
   "debug": false,
   "ignoreError": false,
   "message": {
-    "bindStart": "[!] 绑定开始,请加群12345678输入: \"绑定 #code\" 进行绑定, 请在#time完成绑定!",
+    "bindStart": "§f[§a!§f] 开始绑定,请在群 §e123456 §f输入 '绑定 #code' 进行绑定! \n§f[§c!§f] 请在§a #time §f前完成验证,到时将自动取消绑定!",
     "bindSuccess": "§f[§a!§f] 绑定§f §a#account §f(§a#name§f) 成功!",
-    "bindFail": "",
-    "syncSuccess": ""
+    "bindFail": "§f[§c!§f] §c绑定失败 #why"
   },
   "command": {
     "allowBind": true

@@ -2,6 +2,7 @@ package com.springwater.easybot;
 
 import com.springwater.easybot.bridge.BridgeClient;
 import com.springwater.easybot.bridge.ClientProfile;
+import com.springwater.easybot.commands.EasyBotCommands;
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.config.EasyBotConfig;
 import com.springwater.easybot.features.*;
@@ -11,6 +12,7 @@ import com.springwater.easybot.logger.Slf4jLoggerAdapter;
 import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
 import lombok.Getter;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
@@ -93,6 +95,10 @@ public class EasyBotFabric implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPED.register(serverInstance -> {
             EasyBotNetworkingThreadPool.getInstance().shutdown(); // 先关调度器,防止bridge关了之后还发消息
             bridgeClient.close(); // 调用这个方法bridge就真似了
+        });
+
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> { 
+            EasyBotCommands.register(dispatcher);
         });
     }
 

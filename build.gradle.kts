@@ -76,6 +76,7 @@ dependencies {
         "fabric-networking-api-v1",     // 玩家登录等数据的处理
         "fabric-message-api-v1",        // 专门处理消息同步
         "fabric-lifecycle-events-v1",   // 检测MC服务器启动
+        "fabric-command-api-v2",        // 注册命令
     )
     fapi(*requiredFApiList.toTypedArray())
 }
