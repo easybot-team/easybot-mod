@@ -42,8 +42,7 @@ public class EasyBotFabric implements ModInitializer {
     @Getter
     private static BridgeClient bridgeClient = null;
 
-    private static final List<IEasyBotFeatures> features = List.of(
-            new PlayerLoginFeature(),               // 玩家登陆任务(强制绑定触发器)
+    private static final List<IEasyBotFeatures> features = List.of(new PlayerLoginFeature(),               // 玩家登陆任务(强制绑定触发器)
             new LoginEventSyncFeature(),             // 消息同步接口(进入退出)
             new MessageSyncFeature(),             // 消息同步接口
             new PlayerDeathSyncFeature()             // 玩家死亡任务(同步消息)
@@ -67,7 +66,7 @@ public class EasyBotFabric implements ModInitializer {
             LOGGER.warn("=====================================");
             throw new RuntimeException("配置加载失败", e);
         }
-        
+
         doDependencyCheck();
 
         // 在启动前设置Logger 不用默认的
@@ -116,15 +115,15 @@ public class EasyBotFabric implements ModInitializer {
 
     private static void doDependencyCheck() {
         LOGGER.info("正在进行依赖检查");
-        if(FabricLoader.getInstance().isModLoaded("placeholder-api")){
-            LOGGER.info("检测到TextPlaceholderAPI 已启动占位符功能");
+        if (FabricLoader.getInstance().isModLoaded("placeholder-api")) {
+            LOGGER.info("检测到TextPlaceholderAPI 已启动占位符功能 [Api:" + PAPI + "]");
             ClientProfile.setPapiSupported(true);
-        }else{
+        } else {
             LOGGER.warn("未检测到TextPlaceholderAPI 为了您更好的使用体验,建议您安装此MOD: https://modrinth.com/mod/placeholder-api");
             ClientProfile.setPapiSupported(false);
         }
     }
-    
+
     private static void resetBridgeClient() {
         bridgeClient.setToken(ConfigLoader.get().getToken());
         bridgeClient.resetUrl(ConfigLoader.get().getWs());
