@@ -74,7 +74,7 @@ public class ComponentBuilderImpl {
             );
             
             String atUserName = segment.getAtUserName();
-            if(segment.getAtPlayerNames().length > 1){
+            if(segment.getAtPlayerNames().length >= 1){
                 atUserName = segment.getAtPlayerNames()[0];
             }
             
