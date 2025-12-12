@@ -1,14 +1,19 @@
 package com.springwater.easybot.features;
 
 import com.springwater.easybot.EasyBotFabric;
+import com.springwater.easybot.bridge.model.PlayerInfo;
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.mixin.ServerLoginNetworkHandlerAccessor;
+import com.springwater.easybot.statistic.StatisticManager;
+import com.springwater.easybot.utils.FloodgateUtils;
 import com.springwater.easybot.utils.GameProfileUtils;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.network.ServerLoginPacketListenerImpl;
+import org.geysermc.floodgate.api.player.FloodgatePlayer;
 
 import java.net.InetSocketAddress;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class PlayerLoginFeature implements IEasyBotFeatures {
@@ -17,17 +22,27 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
         ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> {
             // 这会让客户端停留在 "通讯数据中..."
             synchronizer.waitFor(CompletableFuture.runAsync(() -> {
+                var profile = ((ServerLoginNetworkHandlerAccessor) handler).getGameProfile();
+                var name = GameProfileUtils.getName(profile);
+                var uuid = UUID.fromString(GameProfileUtils.getUuid(profile));
+
+                PlayerInfo floodgatePlayer = FloodgateUtils.getFloodgatePlayerInfo(uuid);
+                if (floodgatePlayer != null) {
+                    name = floodgatePlayer.getPlayerName();
+                    uuid = UUID.fromString(floodgatePlayer.getPlayerUuid());
+                }
+
+                // 缓存玩家信息
+                StatisticManager.getInstance().getStatDb().putUuidCache(name, uuid);
+                
                 if (!EasyBotFabric.getBridgeClient().isReady()) {
                     handleError(handler, "当前服务器未连接到主程序");
                     return;
                 }
-                var profile = ((ServerLoginNetworkHandlerAccessor) handler).getGameProfile();
-                var name = GameProfileUtils.getName(profile);
-                var uuid = GameProfileUtils.getUuid(profile);
-                var remoteAddress = (InetSocketAddress)((ServerLoginNetworkHandlerAccessor) handler).GetConnection().getRemoteAddress();
-                EasyBotFabric.getBridgeClient().reportPlayer(name, uuid, remoteAddress.getHostName());
+                var remoteAddress = (InetSocketAddress) ((ServerLoginNetworkHandlerAccessor) handler).GetConnection().getRemoteAddress();
+                EasyBotFabric.getBridgeClient().reportPlayer(name, uuid.toString(), remoteAddress.getHostName());
                 try {
-                    var resp = EasyBotFabric.getBridgeClient().login(name, uuid);
+                    var resp = EasyBotFabric.getBridgeClient().login(name, uuid.toString());
                     if (resp.getKick()) {
                         handler.disconnect(Component.literal(resp.getKickMessage()));
                     }

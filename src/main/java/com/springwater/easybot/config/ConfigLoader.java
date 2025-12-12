@@ -23,9 +23,9 @@ import java.util.function.Consumer;
 public class ConfigLoader {
     private static final Logger LOGGER = EasyBotFabric.LOGGER;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final String CONFIG_FILE_NAME = "easybotfabric.json";
-
-    public static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve(CONFIG_FILE_NAME);
+    private static final String CONFIG_FILE_NAME = "config.json";
+    private static final String CONFIG_ROOT_PATH = FabricLoader.getInstance().getConfigDir().resolve(EasyBotFabric.MOD_ID).toString();
+    public static final Path CONFIG_PATH = Path.of(CONFIG_ROOT_PATH, CONFIG_FILE_NAME);
     private static final AtomicBoolean isWatcherRunning = new AtomicBoolean(false);
 
     // 当前正在使用的配置实例

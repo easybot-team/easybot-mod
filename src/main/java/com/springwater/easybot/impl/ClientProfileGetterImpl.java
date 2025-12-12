@@ -14,5 +14,6 @@ public class ClientProfileGetterImpl {
         ClientProfile.setDebugMode(ConfigLoader.get().isDebug());
         ClientProfile.setOnlineMode(server.usesAuthentication()); // usesAuthentication(yarn: IsOnlineMode)
         ClientProfile.setCommandSupported(true);
+        ClientProfile.setPapiSupported(true);
     }
 }

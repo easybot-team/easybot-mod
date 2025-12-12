@@ -1,11 +1,15 @@
 package com.springwater.easybot.utils;
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 
 import java.util.Optional;
 
 public class TextUtils {
+    public static String clearStyleCode(String text) {
+        return text.replaceAll("§[0-9a-fklmnorx]", "");
+    }
     public static String toLegacyString(Component component) {
         StringBuilder sb = new StringBuilder();
         component.visit((style, text) -> {

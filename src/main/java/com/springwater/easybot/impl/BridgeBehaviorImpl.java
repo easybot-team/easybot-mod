@@ -8,7 +8,9 @@ import com.springwater.easybot.bridge.message.TextSegment;
 import com.springwater.easybot.bridge.model.PlayerInfo;
 import com.springwater.easybot.bridge.model.ServerInfo;
 import com.springwater.easybot.config.ConfigLoader;
-import com.springwater.easybot.placeholder.PlaceholderApi;
+import com.springwater.easybot.placeholder.PlaceholderManager;
+import com.springwater.easybot.placeholder.TextPlaceholderApiMod;
+import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
 import com.springwater.easybot.utils.LoaderUtils;
 import com.springwater.easybot.utils.PlayerInfoUtils;
 import com.springwater.easybot.utils.PlayerUtils;
@@ -32,7 +34,7 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
             var finalCommand = command;
             ServerPlayer serverPlayer = EasyBotFabric.getServer().getPlayerList().getPlayerByName(playerName);
             if (enablePapi) {
-                finalCommand = PlaceholderApi.replacePlaceholders(command, playerName, serverPlayer);
+                finalCommand = TextPlaceholderApiMod.replacePlaceholders(command, playerName, serverPlayer);
             }
             commandFuture.complete(finalCommand);
         });
@@ -43,16 +45,16 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
     @Override
     public String papiQuery(String playerName, String query) {
         var future = new CompletableFuture<String>();
-        EasyBotFabric.getServer().execute(() -> {
+        EasyBotNetworkingThreadPool.getInstance().addTask(() -> {
             try {
                 var player = EasyBotFabric.getServer().getPlayerList().getPlayerByName(playerName);
-                var resp = PlaceholderApi.replacePlaceholders(query, playerName, player);
+                var resp = PlaceholderManager.getInstance().replacePlaceholders(query, playerName, player);
                 future.complete(resp);
             } catch (Exception e) {
                 EasyBotFabric.LOGGER.error("PAPI查询失败: {}", e.getMessage());
                 future.completeExceptionally(e);
             }
-        });
+        }, "在线PAPI查询任务");
         return future.join();
     }
 

@@ -39,6 +39,14 @@ repositories {
             password = System.getenv("TOKEN")
         }
     }
+
+    maven {
+        url = uri("https://maven.pkg.github.com/easybot-team/ez-statistic")
+        credentials {
+            username = System.getenv("USERNAME")
+            password = System.getenv("TOKEN")
+        }
+    }
     maven {
         url = uri("https://maven.nucleoid.xyz/")
         name = "Nucleoid-Text-Placeholder-Api-Repo"
@@ -70,6 +78,8 @@ dependencies {
     //
 
     shade("com.springwater.easybot:easybot-bridge:${property("deps.bridge_version")}")
+    shade("com.springwater.easybot:ez-statistic:${property("deps.ez_statistic_version")}")
+    shade("com.ezylang:EvalEx:3.5.0")
 
     val requiredFApiList = listOf(
         "fabric-entity-events-v1",      // 玩家死亡等数据的处理
@@ -108,8 +118,13 @@ tasks.shadowJar {
     relocate("javax.websocket", "com.springwater.easybot.libs.javax.websocket")
     relocate("org.eclipse.jetty", "com.springwater.easybot.libs.eclipse.jetty")
     relocate("com.google.gson", "com.springwater.easybot.libs.com.google.gson")
+    relocate("net.minidev", "com.springwater.easybot.libs.net.minidev")
+    relocate("com.jayway", "com.springwater.easybot.libs.com.jayway")
+    relocate("org.objectweb.asm", "com.springwater.easybot.libs.org.objectweb.asm")
+    relocate("com.ezylang.evalex", "com.springwater.easybot.libs.com.ezylang.evalex")
     exclude("META-INF/maven/**")
     exclude("about.html")
+    exclude("org/slf4j/**")
 }
 
 tasks {

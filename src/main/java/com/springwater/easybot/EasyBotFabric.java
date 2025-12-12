@@ -9,6 +9,10 @@ import com.springwater.easybot.features.*;
 import com.springwater.easybot.impl.BridgeBehaviorImpl;
 import com.springwater.easybot.impl.ClientProfileGetterImpl;
 import com.springwater.easybot.logger.Slf4jLoggerAdapter;
+import com.springwater.easybot.placeholder.PlaceholderManager;
+import com.springwater.easybot.placeholder.handlers.MathHandler;
+import com.springwater.easybot.placeholder.handlers.StatisticHandler;
+import com.springwater.easybot.statistic.StatisticManager;
 import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
 import lombok.Getter;
 import net.fabricmc.api.ModInitializer;
@@ -16,10 +20,12 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.level.storage.LevelResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 //
@@ -44,7 +50,8 @@ public class EasyBotFabric implements ModInitializer {
     @Getter
     private static BridgeClient bridgeClient = null;
 
-    private static final List<IEasyBotFeatures> features = List.of(new PlayerLoginFeature(),               // 玩家登陆任务(强制绑定触发器)
+    private static final List<IEasyBotFeatures> features = List.of(
+            new PlayerLoginFeature(),               // 玩家登陆任务(强制绑定触发器)
             new LoginEventSyncFeature(),             // 消息同步接口(进入退出)
             new MessageSyncFeature(),             // 消息同步接口
             new PlayerDeathSyncFeature()             // 玩家死亡任务(同步消息)
@@ -71,6 +78,8 @@ public class EasyBotFabric implements ModInitializer {
 
         doDependencyCheck();
 
+        doPlaceholderHandlerRegister();
+
         // 在启动前设置Logger 不用默认的
         BridgeClient.setLogger(new Slf4jLoggerAdapter(LOGGER));
 
@@ -86,6 +95,7 @@ public class EasyBotFabric implements ModInitializer {
         // 开发时注意: 尽量调用FabricApi
         ServerLifecycleEvents.SERVER_STARTING.register(serverInstance -> {
             server = serverInstance;
+            doStatDbInit();
             LOGGER.info("正在获取服务器配置");
             new ClientProfileGetterImpl().BuildClientProfile(serverInstance);
             bridgeClient = new BridgeClient(ConfigLoader.get().getWs(), new BridgeBehaviorImpl());
@@ -97,7 +107,7 @@ public class EasyBotFabric implements ModInitializer {
             bridgeClient.close(); // 调用这个方法bridge就真似了
         });
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> { 
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             EasyBotCommands.register(dispatcher);
         });
     }
@@ -119,14 +129,34 @@ public class EasyBotFabric implements ModInitializer {
         resetBridgeClient();
     }
 
+    private static void doStatDbInit() {
+        LOGGER.info("正在初始化统计数据库");
+        StatisticManager.getInstance().initDb(ConfigLoader.CONFIG_PATH.getParent().resolve("uuid_mapping").toString());
+        var overworld = server.getWorldPath(LevelResource.ROOT);
+        var statPath = overworld.resolve("stats");
+        if (!Files.exists(statPath)) {
+            LOGGER.warn("未找到统计数据目录 {} 无法使用玩家统计变量!", statPath);
+            ModFlags.setPlayerStatisticSupported(false);
+        } else {
+            StatisticManager.getInstance().setSavePath(statPath);
+            ModFlags.setPlayerStatisticSupported(true);
+        }
+    }
+
+    private static void doPlaceholderHandlerRegister() {
+        LOGGER.info("正在注册占位符处理器");
+        PlaceholderManager.getInstance().registerHandler(new StatisticHandler());
+        PlaceholderManager.getInstance().registerHandler(new MathHandler());
+    }
+
     private static void doDependencyCheck() {
         LOGGER.info("正在进行依赖检查");
         if (FabricLoader.getInstance().isModLoaded("placeholder-api")) {
-            LOGGER.info("检测到TextPlaceholderAPI 已启动占位符功能 [Api:" + PAPI + "]");
-            ClientProfile.setPapiSupported(true);
+            LOGGER.info("检测到TextPlaceholderAPI 已启动占位符增强功能 [Api:" + PAPI + "]");
+            ModFlags.setTextPlaceholderApiInstalled(true);
         } else {
             LOGGER.warn("未检测到TextPlaceholderAPI 为了您更好的使用体验,建议您安装此MOD: https://modrinth.com/mod/placeholder-api");
-            ClientProfile.setPapiSupported(false);
+            ModFlags.setTextPlaceholderApiInstalled(false);
         }
 
 
