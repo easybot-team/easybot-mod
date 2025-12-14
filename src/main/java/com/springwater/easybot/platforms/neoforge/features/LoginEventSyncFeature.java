@@ -1,5 +1,5 @@
 //? neoforge {
-package com.springwater.easybot.platforms.neoforge.features;
+/*package com.springwater.easybot.platforms.neoforge.features;
 
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.features.IEasyBotFeatures;
@@ -46,4 +46,4 @@ public class LoginEventSyncFeature implements IEasyBotFeatures {
     }
 }
 
-//?}
+*///?}

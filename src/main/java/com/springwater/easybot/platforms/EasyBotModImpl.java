@@ -1,13 +1,16 @@
 package com.springwater.easybot.platforms;
-
+//? legacyforge {
+import com.springwater.easybot.bridge.BridgeClient;
+import com.springwater.easybot.platforms.legacyforge.LegacyForgeModImpl;
+//?}
 //? fabric {
 /*import com.springwater.easybot.bridge.BridgeClient;
 import com.springwater.easybot.platforms.fabric.FabricModImpl;
 *///?}
 //? neoforge {
-import com.springwater.easybot.bridge.BridgeClient;
+/*import com.springwater.easybot.bridge.BridgeClient;
 import com.springwater.easybot.platforms.neoforge.NeoForgeModImpl;
- //?}
+ *///?}
 import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
 
@@ -18,8 +21,11 @@ public interface EasyBotModImpl {
     /*EasyBotModImpl INSTANCE = new FabricModImpl();
     *///?}
     //? neoforge {
-    EasyBotModImpl INSTANCE = new NeoForgeModImpl();
-     //?}
+    /*EasyBotModImpl INSTANCE = new NeoForgeModImpl();
+     *///?}
+    //? legacyforge {
+    EasyBotModImpl INSTANCE = new LegacyForgeModImpl();
+    //?}
     
     String getLoaderName();
 

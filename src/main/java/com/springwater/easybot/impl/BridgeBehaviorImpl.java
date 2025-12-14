@@ -67,11 +67,11 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
         /*info.setServerName(FabricLoaderUtils.isQuilt() ? "Quilt" : "Fabric");
         *///?}
         //? neoforge {
-        info.setServerName("NeoForge");
-        //?}
-        //? forge {
-        /*info.setServerName("Forge");
-         *///?}
+        /*info.setServerName("NeoForge");
+        *///?}
+        //? legacyforge {
+        info.setServerName("Forge");
+         //?}
         info.setServerVersion(EasyBotModImpl.INSTANCE.getServer().getServerVersion());
         info.setPluginVersion(ModData.VERSION);
         info.setCommandSupported(ClientProfile.isCommandSupported());

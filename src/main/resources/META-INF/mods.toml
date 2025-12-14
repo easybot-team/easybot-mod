@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[${forge_loader_range},)"
+license="Apache-2.0"
+
+[[mods]]
+modId="${id}"
+version="${version}"
+displayName="EasyBot Forge"
+logoFile = "assets/${id}/logo.png"
+authors = "MiuxuE"
+description = "EasyBot for Forge"
+
+[[dependencies.${id}]]
+modId="forge"
+mandatory=true
+versionRange="[${forge_loader_range},)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${id}]]
+modId="minecraft"
+mandatory=true
+versionRange="${minecraft_range}"
+ordering="NONE"
+side="SERVER"

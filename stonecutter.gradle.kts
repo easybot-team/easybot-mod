@@ -1,17 +1,17 @@
 plugins {
     id("dev.kikugie.stonecutter")
     id("fabric-loom") version "1.13-SNAPSHOT" apply false
-    id("net.neoforged.moddev") version "2.0.123" apply false
+    id("net.neoforged.moddev") version "2.0.123" apply false    
     id("net.minecraftforge.gradle") version "6.0.46" apply false
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0" apply false
 }
 
-stonecutter active "1.21.1-neoforge"
+stonecutter active "1.20.1-legacyforge"
 
 
 // See https://stonecutter.kikugie.dev/wiki/config/params
 stonecutter parameters {
-    constants.match(node.metadata.project.substringAfterLast('-'), "fabric", "neoforge", "forge")
+    constants.match(node.metadata.project.substringAfterLast('-'), "fabric", "neoforge", "legacyforge")
     swaps["mod_id"] = "\"" + property("mod.id") + "\";"
     swaps["mod_version"] = "\"" + property("mod.version") + "\";"
     swaps["minecraft"] = "\"" + node.metadata.version + "\";"

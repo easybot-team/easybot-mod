@@ -1,5 +1,5 @@
-//? neoforge {
-/*package com.springwater.easybot.platforms.neoforge;
+//? legacyforge {
+package com.springwater.easybot.platforms.legacyforge;
 import com.springwater.easybot.ModFlags;
 import com.springwater.easybot.bridge.BridgeClient;
 import com.springwater.easybot.bridge.ClientProfile;
@@ -14,23 +14,22 @@ import com.springwater.easybot.placeholder.PlaceholderManager;
 import com.springwater.easybot.placeholder.handlers.MathHandler;
 import com.springwater.easybot.placeholder.handlers.StatisticHandler;
 import com.springwater.easybot.platforms.ModData;
-import com.springwater.easybot.platforms.neoforge.features.LoginEventSyncFeature;
-import com.springwater.easybot.platforms.neoforge.features.MessageSyncFeature;
-import com.springwater.easybot.platforms.neoforge.features.PlayerDeathSyncFeature;
-import com.springwater.easybot.platforms.neoforge.features.PlayerLoginFeature;
+import com.springwater.easybot.platforms.legacyforge.features.LoginEventSyncFeature;
+import com.springwater.easybot.platforms.legacyforge.features.MessageSyncFeature;
+import com.springwater.easybot.platforms.legacyforge.features.PlayerDeathSyncFeature;
+import com.springwater.easybot.platforms.legacyforge.features.PlayerLoginFeature;
 import com.springwater.easybot.statistic.StatisticManager;
 import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
 import lombok.Getter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.event.server.ServerStoppingEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -38,7 +37,7 @@ import java.nio.file.Files;
 import java.util.List;
 
 @Mod(ModData.MOD_ID)
-public class NeoForgeEntry {
+public class LegacyForgeEntry {
     private static final Logger LOGGER = ModData.LOGGER;
     @Getter
     private static MinecraftServer server = null;
@@ -46,14 +45,18 @@ public class NeoForgeEntry {
     @Getter
     private static BridgeClient bridgeClient = null;
     private static final List<IEasyBotFeatures> features = List.of(
-            new LoginEventSyncFeature(),          // 消息同步接口(进入退出)
-            new MessageSyncFeature(),             // 消息同步接口
-            new PlayerDeathSyncFeature()          // 玩家死亡任务(同步消息)
+            new LoginEventSyncFeature(),             // 消息同步接口(进入退出)
+            new MessageSyncFeature(),               // 消息同步接口
+            new PlayerDeathSyncFeature(),          // 玩家死亡任务(同步消息)
+            new PlayerLoginFeature()
     );
+    public LegacyForgeEntry() {
 
-    public NeoForgeEntry(IEventBus modEventBus) {
-        LOGGER.info("EasyBot NeoForge-" + ModData.VERSION + "+" + ModData.MINECRAFT + " 启动中!");
-        NeoForge.EVENT_BUS.register(this);
+        LOGGER.info("EasyBot Forge-" + ModData.VERSION + "+" + ModData.MINECRAFT + " 启动中!");
+
+        // 注册到 MinecraftForge 全局事件总线 (用于服务器事件等)
+        MinecraftForge.EVENT_BUS.register(LegacyForgeEntry.class);
+
         try {
             ConfigLoader.load();
             ConfigLoader.registerOnConfigChanged(this::handleConfigReload);
@@ -80,8 +83,6 @@ public class NeoForgeEntry {
         ConfigLoader.waitForToken();
 
         EasyBotNetworkingThreadPool.getInstance(); // 这一步仅仅只是为了让线程池初始化资源,为后续上报任务做准备
-    
-        modEventBus.register(new PlayerLoginFeature());
     }
 
     @SubscribeEvent
@@ -99,8 +100,12 @@ public class NeoForgeEntry {
 
     @SubscribeEvent
     public static void onServerStopping(ServerStoppingEvent event) {
-        EasyBotNetworkingThreadPool.getInstance().shutdown(); // 先关调度器,防止bridge关了之后还发消息
-        bridgeClient.close(); // 调用这个方法bridge就真似了
+        if (EasyBotNetworkingThreadPool.getInstance() != null) {
+            EasyBotNetworkingThreadPool.getInstance().shutdown(); // 先关调度器,防止bridge关了之后还发消息
+        }
+        if (bridgeClient != null) {
+            bridgeClient.close(); // 调用这个方法bridge就真似了
+        }
     }
 
     @SubscribeEvent
@@ -110,13 +115,9 @@ public class NeoForgeEntry {
 
 
     public void handleConfigReload(EasyBotConfig config) {
-        if (server == null) return; // 大概率不会走到这里,除了用户在服务器都没创建的时候保存了配置, 要是其他情况能走到这里我得制裁写代码的人了
+        if (server == null) return; // 大概率不会走到这里,除了用户在服务器都没创建的时候保存了配置
         LOGGER.info("正在重新获取服务器配置");
         new ClientProfileGetterImpl().BuildClientProfile(server);
-
-        // 考虑到服务器已经成功运行了,这里如果没设置token就没设置吧..
-        // 卡住运行中的服务器线程 那服主很头大了
-        // ConfigLoader.waitForToken();
 
         if (config.getToken().isEmpty()) {
             LOGGER.warn("您未设置Token,本次重载不生效!"); // 警告
@@ -148,7 +149,8 @@ public class NeoForgeEntry {
 
     private static void doDependencyCheck() {
         LOGGER.info("正在进行依赖检查");
-        if (ModList.get().isLoaded("geyser_neoforge")) {
+        // Forge 使用 ModList 类，用法基本一致
+        if (ModList.get().isLoaded("geyser_neoforge") || ModList.get().isLoaded("geyser_forge")) {
             LOGGER.info("检测到Geyser 已启动Geyser兼容功能");
             ClientProfile.setHasGeyser(true);
         }
@@ -160,9 +162,11 @@ public class NeoForgeEntry {
     }
 
     private static void resetBridgeClient() {
-        bridgeClient.setToken(ConfigLoader.get().getToken());
-        bridgeClient.resetUrl(ConfigLoader.get().getWs());
-        bridgeClient.stop(); // 这里使用会自动重连的stop而不是销毁时候用的close！！！
+        if (bridgeClient != null) {
+            bridgeClient.setToken(ConfigLoader.get().getToken());
+            bridgeClient.resetUrl(ConfigLoader.get().getWs());
+            bridgeClient.stop(); // 这里使用会自动重连的stop而不是销毁时候用的close！！！
+        }
     }
 }
-*///?}
+//?}

@@ -1,16 +1,16 @@
-//? neoforge {
-/*package com.springwater.easybot.platforms.neoforge.features;
+//? legacyforge {
+package com.springwater.easybot.platforms.legacyforge.features;
 
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.features.IEasyBotFeatures;
-import com.springwater.easybot.platforms.EasyBotModImpl;
+import com.springwater.easybot.platforms.legacyforge.LegacyForgeEntry;
 import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
 import com.springwater.easybot.utils.PlayerUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,17 +72,18 @@ public class PlayerDeathSyncFeature implements IEasyBotFeatures {
 
     @Override
     public void register() {
-        NeoForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
         if (ConfigLoader.get().getSkipOptions().isSkipDeath()) return;
+        if (LegacyForgeEntry.getBridgeClient() == null || !LegacyForgeEntry.getBridgeClient().isReady()) {
+            return;
+        }
 
-        // 从事件中获取死亡的实体
         var entity = event.getEntity();
         if (entity instanceof ServerPlayer player) {
-            // 从事件中获取伤害来源
             var source = event.getSource();
 
             var profile = PlayerUtils.getPlayerInfo(player);
@@ -93,9 +94,17 @@ public class PlayerDeathSyncFeature implements IEasyBotFeatures {
                 killer.append(getKillerName(livingEntity));
                 deathReason.append(profile.name).append(" 被 ").append(killer).append(" 杀死了");
             } else {
-                var key = source.typeHolder().unwrapKey();
-                if (key.isPresent()) {
-                    var path = key.get().location().getPath();
+                String path;
+
+                // 适配不同版本的 DamageSource 获取 ID 方式
+                //? if >=1.19.4 {
+                path = source.type().msgId();
+                //?} else {
+                /*path = source.getMsgId();
+                 *///?}
+
+                //noinspection ConstantValue
+                if (path != null) {
                     if (player.getKillCredit() != null) {
                         killer.append(getKillerName(player.getKillCredit()));
                     } else {
@@ -104,7 +113,9 @@ public class PlayerDeathSyncFeature implements IEasyBotFeatures {
                     deathReason.append(DEATH_MESSAGES.getOrDefault(path, "%s 死了").replace("%s", profile.name));
                 }
             }
-            EasyBotNetworkingThreadPool.getInstance().addTask(() -> EasyBotModImpl.INSTANCE.getBridgeClient().syncDeathMessage(profile, deathReason.toString(), killer.toString()), "消息同步-死亡");
+
+            EasyBotNetworkingThreadPool.getInstance().addTask(() ->
+                    LegacyForgeEntry.getBridgeClient().syncDeathMessage(profile, deathReason.toString(), killer.toString()), "消息同步-死亡");
         }
     }
 
@@ -113,5 +124,4 @@ public class PlayerDeathSyncFeature implements IEasyBotFeatures {
         return entity.getName().getString();
     }
 }
-
-*///?}
+//?}

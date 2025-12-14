@@ -84,6 +84,7 @@ tasks {
         inputs.property("minecraft", project.property("mod.mc_dep"))
         inputs.property("neoforge", project.property("deps.neoforge"))
         inputs.property("minecraft_range", project.property("forge.minecraft.range"))
+        inputs.property("forge_loader_range", project.property("forge.loader.range"))
 
         val props = mapOf(
             "id" to project.property("mod.id"),
@@ -91,11 +92,13 @@ tasks {
             "version" to project.property("mod.version"),
             "minecraft" to project.property("mod.mc_dep"),
             "minecraft_range" to project.property("forge.minecraft.range"),
-            "neoforge" to project.property("deps.neoforge")
+            "neoforge" to project.property("deps.neoforge"),
+            "forge_loader_range" to project.property("forge.loader.range")
         )
 
-        filesMatching("fabric.mod.json") { expand(props) }
-        filesMatching("**/neoforge.mods.toml") { expand(props) }
+        filesMatching(listOf("META-INF/mods.toml", "META-INF/neoforge.mods.toml", "fabric.mod.json")) {
+            expand(props)
+        }
 
         //val mixinJava = "JAVA_${requiredJava.majorVersion}"
         //filesMatching("*.mixins.json") { expand("java" to mixinJava) }

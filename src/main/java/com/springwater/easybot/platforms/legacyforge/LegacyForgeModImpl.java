@@ -1,22 +1,22 @@
-//? neoforge {
-/*package com.springwater.easybot.platforms.neoforge;
+//? legacyforge {
+package com.springwater.easybot.platforms.legacyforge;
+
 import com.springwater.easybot.bridge.BridgeClient;
 import com.springwater.easybot.platforms.EasyBotModImpl;
 import com.springwater.easybot.platforms.ModData;
 import net.minecraft.server.MinecraftServer;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.loading.FMLPaths;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLPaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 
-public class NeoForgeModImpl implements EasyBotModImpl {
+public class LegacyForgeModImpl implements EasyBotModImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModData.MOD_ID);
-
     @Override
     public String getLoaderName() {
-        return "neoforge";
+        return "legacyforge";
     }
 
     @Override
@@ -36,12 +36,12 @@ public class NeoForgeModImpl implements EasyBotModImpl {
 
     @Override
     public MinecraftServer getServer() {
-        return NeoForgeEntry.getServer();
+        return LegacyForgeEntry.getServer();
     }
 
     @Override
     public BridgeClient getBridgeClient() {
-        return NeoForgeEntry.getBridgeClient();
+        return LegacyForgeEntry.getBridgeClient();
     }
 }
-*///?}
+//?}

@@ -16,6 +16,11 @@ val requiredJava = when {
     else -> JavaVersion.VERSION_1_8
 }
 
+java {
+    targetCompatibility = requiredJava
+    sourceCompatibility = requiredJava
+}
+
 dependencies {
     compileOnly("maven.modrinth:floodgate:${property("deps.floodgate_version")}")
     shade("com.springwater.easybot:ez-statistic:${property("deps.ez_statistic_version")}") {
@@ -33,6 +38,7 @@ neoForge {
         register("server") {
             jvmArgument("-Dmixin.debug.export=true")
             gameDirectory = file("../../run")
+            programArgument("--nogui")
             server()
         }
     }
