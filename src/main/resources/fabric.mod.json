@@ -12,17 +12,17 @@
     "sources": "https://github.com/easybot-team/Easybot-Fabric"
   },
   "license": "CC0-1.0",
-  "icon": "assets/easybotfabric/icon.png",
+  "icon": "assets/easybot/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.springwater.easybot.EasyBotFabric"
+      "com.springwater.easybot.platforms.fabric.FabricEntry"
     ]
   },
   "mixins": [
-    "easybotfabric.mixins.json"
+    "easybot.mixins.json"
   ],
-  "accessWidener": "easybotfabric.accesswidener",
+  "accessWidener": "easybot.accesswidener",
   "depends": {
     "fabricloader": ">=0.17",
     "minecraft": "${minecraft}"

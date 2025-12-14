@@ -1,7 +1,8 @@
-package com.springwater.easybot.placeholder;
-
-import com.springwater.easybot.EasyBotFabric;
+//? fabric {
+/*package com.springwater.easybot.placeholder;
 import com.springwater.easybot.ModFlags;
+import com.springwater.easybot.platforms.EasyBotModImpl;
+import com.springwater.easybot.platforms.ModData;
 import com.springwater.easybot.utils.TextUtils;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.Placeholders;
@@ -54,14 +55,15 @@ public class TextPlaceholderApiMod {
         }
         try {
             var context = (player == null)
-                    ? PlaceholderContext.of(EasyBotFabric.getServer())
+                    ? PlaceholderContext.of(EasyBotModImpl.INSTANCE.getServer())
                     : PlaceholderContext.of(player);
             var placeholders = Component.literal(intermediate);
             var result = Placeholders.parseText(placeholders, context);
             return TextUtils.toLegacyString(result);
         } catch (Exception e) {
-            EasyBotFabric.LOGGER.error("TextPlaceholderApi 调用失败: {}", e.getMessage());
+            ModData.LOGGER.error("TextPlaceholderApi 调用失败: {}", e.getMessage());
             return intermediate;
         }
     }
 }
+*///?}

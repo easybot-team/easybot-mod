@@ -1,6 +1,4 @@
 package com.springwater.easybot.impl;
-
-import com.springwater.easybot.EasyBotFabric;
 import com.springwater.easybot.bridge.BridgeBehavior;
 import com.springwater.easybot.bridge.ClientProfile;
 import com.springwater.easybot.bridge.message.Segment;
@@ -9,9 +7,12 @@ import com.springwater.easybot.bridge.model.PlayerInfo;
 import com.springwater.easybot.bridge.model.ServerInfo;
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.placeholder.PlaceholderManager;
-import com.springwater.easybot.placeholder.TextPlaceholderApiMod;
+import com.springwater.easybot.platforms.EasyBotModImpl;
+import com.springwater.easybot.platforms.ModData;
 import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
-import com.springwater.easybot.utils.LoaderUtils;
+//? fabric {
+/*import com.springwater.easybot.platforms.fabric.utils.FabricLoaderUtils;
+*///?}
 import com.springwater.easybot.utils.PlayerInfoUtils;
 import com.springwater.easybot.utils.PlayerUtils;
 import net.minecraft.network.chat.Component;
@@ -30,11 +31,11 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
     @Override
     public String runCommand(String playerName, String command, boolean enablePapi) {
         CompletableFuture<String> commandFuture = new CompletableFuture<>();
-        EasyBotFabric.getServer().execute(() -> {
+        EasyBotModImpl.INSTANCE.getServer().execute(() -> {
             var finalCommand = command;
-            ServerPlayer serverPlayer = EasyBotFabric.getServer().getPlayerList().getPlayerByName(playerName);
+            ServerPlayer serverPlayer = EasyBotModImpl.INSTANCE.getServer().getPlayerList().getPlayerByName(playerName);
             if (enablePapi) {
-                finalCommand = TextPlaceholderApiMod.replacePlaceholders(command, playerName, serverPlayer);
+                finalCommand = PlaceholderManager.getInstance().replacePlaceholders(command, playerName, serverPlayer);
             }
             commandFuture.complete(finalCommand);
         });
@@ -47,11 +48,11 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
         var future = new CompletableFuture<String>();
         EasyBotNetworkingThreadPool.getInstance().addTask(() -> {
             try {
-                var player = EasyBotFabric.getServer().getPlayerList().getPlayerByName(playerName);
+                var player = EasyBotModImpl.INSTANCE.getServer().getPlayerList().getPlayerByName(playerName);
                 var resp = PlaceholderManager.getInstance().replacePlaceholders(query, playerName, player);
                 future.complete(resp);
             } catch (Exception e) {
-                EasyBotFabric.LOGGER.error("PAPI查询失败: {}", e.getMessage());
+                ModData.LOGGER.error("PAPI查询失败: {}", e.getMessage());
                 future.completeExceptionally(e);
             }
         }, "在线PAPI查询任务");
@@ -62,9 +63,17 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
     public ServerInfo getInfo() {
         // 主程序真正获取服务器信息的地方
         ServerInfo info = new ServerInfo();
-        info.setServerName(LoaderUtils.isQuilt() ? "Quilt" : "Fabric");
-        info.setServerVersion(EasyBotFabric.getServer().getServerVersion());
-        info.setPluginVersion(EasyBotFabric.VERSION);
+        //? fabric {
+        /*info.setServerName(FabricLoaderUtils.isQuilt() ? "Quilt" : "Fabric");
+        *///?}
+        //? neoforge {
+        info.setServerName("NeoForge");
+        //?}
+        //? forge {
+        /*info.setServerName("Forge");
+         *///?}
+        info.setServerVersion(EasyBotModImpl.INSTANCE.getServer().getServerVersion());
+        info.setPluginVersion(ModData.VERSION);
         info.setCommandSupported(ClientProfile.isCommandSupported());
         info.setPapiSupported(ClientProfile.isPapiSupported());
         info.setHasGeyser(ClientProfile.isHasGeyser());
@@ -74,24 +83,24 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
 
     @Override
     public void SyncToChat(String message) {
-        EasyBotFabric.getServer().getPlayerList().broadcastSystemMessage(Component.literal(message), false);
+        EasyBotModImpl.INSTANCE.getServer().getPlayerList().broadcastSystemMessage(Component.literal(message), false);
     }
 
     @Override
     public void BindSuccessBroadcast(String playerName, String accountId, String accountName) {
-        EasyBotFabric.getServer().execute(() -> {
+        EasyBotModImpl.INSTANCE.getServer().execute(() -> {
             var isDebug = ConfigLoader.get().isDebug();
-            if (!EasyBotFabric.getBridgeClient().isReady()) {
+            if (!EasyBotModImpl.INSTANCE.getBridgeClient().isReady()) {
                 // 能走到这里也是十分甚至九分奇怪了, 能在线收到绑定成功消息,但是处理的时候却不在线了,就很奇怪咯
-                EasyBotFabric.LOGGER.warn("玩家{}绑定账号{}({})成功,但当前服务器在处理时掉线 (本次处理为离线处理)", playerName, accountId, accountName);
+                ModData.LOGGER.warn("玩家{}绑定账号{}({})成功,但当前服务器在处理时掉线 (本次处理为离线处理)", playerName, accountId, accountName);
             }
 
 
             if (isDebug) {
-                EasyBotFabric.LOGGER.info("收到通知: {}绑定账号{}({})成功", playerName, accountId, accountName);
+                ModData.LOGGER.info("收到通知: {}绑定账号{}({})成功", playerName, accountId, accountName);
             }
 
-            var bindPlayer = EasyBotFabric.getServer().getPlayerList().getPlayerByName(playerName);
+            var bindPlayer = EasyBotModImpl.INSTANCE.getServer().getPlayerList().getPlayerByName(playerName);
             if (bindPlayer != null) {
                 bindPlayer.playNotifySound(
                         SoundEvents.PLAYER_LEVELUP,
@@ -110,13 +119,13 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
                         )
                 );
             } else if (isDebug) {
-                EasyBotFabric.LOGGER.warn("玩家{}绑定账号{}({})成功,但玩家不在线 (跳过通知)", playerName, accountId, accountName);
+                ModData.LOGGER.warn("玩家{}绑定账号{}({})成功,但玩家不在线 (跳过通知)", playerName, accountId, accountName);
             }
 
 
             if (!ConfigLoader.get().getEvent().isEnableSuccessEvent()) {
                 if (isDebug) {
-                    EasyBotFabric.LOGGER.warn("玩家{}绑定账号{}({})成功,本服未开启命令执行 跳过流程", playerName, accountId, accountName);
+                    ModData.LOGGER.warn("玩家{}绑定账号{}({})成功,本服未开启命令执行 跳过流程", playerName, accountId, accountName);
                 }
                 return;
             }
@@ -124,7 +133,7 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
             if (ConfigLoader.get().getEvent().isEnableSuccessEvent()) {
                 var commands = ConfigLoader.get().getEvent().getBindSuccess();
                 if (isDebug) {
-                    EasyBotFabric.LOGGER.info("玩家{}绑定账号{}({})成功,正在执行命令: {}条", playerName, accountId, accountName, commands.toArray().length);
+                    ModData.LOGGER.info("玩家{}绑定账号{}({})成功,正在执行命令: {}条", playerName, accountId, accountName, commands.toArray().length);
                 }
                 for (String command : commands) {
                     COMMAND_IMPL.DispatchCommand(command.replace("&", "§").replace("$player", playerName).replace("$account", accountId).replace("$name", accountName));
@@ -169,11 +178,11 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
             segmentsToAdd.add(combinedTextSegment);
         }
         MutableComponent root = ComponentBuilderImpl.build(segmentsToAdd);
-        EasyBotFabric.getServer().getPlayerList().broadcastSystemMessage(root, false);
+        EasyBotModImpl.INSTANCE.getServer().getPlayerList().broadcastSystemMessage(root, false);
     }
 
     @Override
     public List<PlayerInfo> getPlayerList() {
-        return PlayerInfoUtils.buildPlayerInfoList(EasyBotFabric.getServer().getPlayerList().getPlayers());
+        return PlayerInfoUtils.buildPlayerInfoList(EasyBotModImpl.INSTANCE.getServer().getPlayerList().getPlayers());
     }
 }

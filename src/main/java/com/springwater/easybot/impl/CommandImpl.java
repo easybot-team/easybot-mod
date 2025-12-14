@@ -1,7 +1,6 @@
 package com.springwater.easybot.impl;
-
-import com.springwater.easybot.EasyBotFabric;
 import com.springwater.easybot.config.ConfigLoader;
+import com.springwater.easybot.platforms.EasyBotModImpl;
 import com.springwater.easybot.utils.TextUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -16,9 +15,9 @@ public class CommandImpl {
 
     public String DispatchCommand(String command) {
         var source = new CommandSourceImpl();
-        var level = EasyBotFabric.getServer().overworld();
-        CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, 4, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotFabric.getServer(), null);
-        EasyBotFabric.getServer().getCommands().performPrefixedCommand(stack, command);
+        var level = EasyBotModImpl.INSTANCE.getServer().overworld();
+        CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, 4, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
+        EasyBotModImpl.INSTANCE.getServer().getCommands().performPrefixedCommand(stack, command);
         var messages = source.getMessages();
         // 原有的同步实现使用换行符
         return String.join("\n", messages.stream().map(TextUtils::toLegacyString).toArray(String[]::new));
@@ -43,13 +42,13 @@ public class CommandImpl {
             }
         };
 
-        var level = EasyBotFabric.getServer().overworld();
-        CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, 4, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotFabric.getServer(), null);
+        var level = EasyBotModImpl.INSTANCE.getServer().overworld();
+        CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, 4, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
 
         // 必须在主线程执行
-        EasyBotFabric.getServer().execute(() -> {
+        EasyBotModImpl.INSTANCE.getServer().execute(() -> {
             try {
-                EasyBotFabric.getServer().getCommands().performPrefixedCommand(stack, command);
+                EasyBotModImpl.INSTANCE.getServer().getCommands().performPrefixedCommand(stack, command);
                 // 标记同步执行结束
                 syncExecutionFinished.set(true);
                 // 如果同步执行后已经有消息了，直接完成，不需要等待异步回调

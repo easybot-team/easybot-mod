@@ -1,8 +1,9 @@
 package com.springwater.easybot.placeholder;
 
-import com.springwater.easybot.EasyBotFabric;
 import com.springwater.easybot.api.IPlaceholderHandler;
 import com.springwater.easybot.api.IPlaceholderManager;
+import com.springwater.easybot.platforms.EasyBotModImpl;
+import com.springwater.easybot.platforms.ModData;
 import lombok.Getter;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +19,7 @@ public class PlaceholderManager implements IPlaceholderManager {
     @Getter
     private static final IPlaceholderManager instance = new PlaceholderManager();
     private final Map<String, IPlaceholderHandler> handlers = new ConcurrentHashMap<>();
-    
+
     private PlaceholderManager() {
     }
 
@@ -34,7 +35,10 @@ public class PlaceholderManager implements IPlaceholderManager {
         if (text == null || text.isEmpty()) {
             return text;
         }
-        String intermediate = TextPlaceholderApiMod.replacePlaceholders(text, playerName, player);
+        String intermediate = text;
+        //? fabric {
+        /*intermediate = TextPlaceholderApiMod.replacePlaceholders(text, playerName, player);
+        *///?}
         Matcher matcher = PLACEHOLDER_PATTERN.matcher(intermediate);
         if (!matcher.find()) {
             return intermediate;
@@ -59,13 +63,13 @@ public class PlaceholderManager implements IPlaceholderManager {
             if (handler != null) {
                 try {
                     if (player == null) {
-                        var server = EasyBotFabric.getServer();
+                        var server = EasyBotModImpl.INSTANCE.getServer();
                         replacement = handler.replacePlaceholders(args, playerName, server);
                     } else {
                         replacement = handler.replacePlaceholders(args, playerName, player);
                     }
                 } catch (Exception e) {
-                    EasyBotFabric.LOGGER.error("PlaceholderApi处理器处理主键 '{}' 时错误: {}", mainKey, e);
+                    ModData.LOGGER.error("PlaceholderApi处理器处理主键 '{}' 时错误: {}", mainKey, e);
                 }
             }
 

@@ -1,7 +1,7 @@
 package com.springwater.easybot.threading;
 
-import com.springwater.easybot.EasyBotFabric;
 import com.springwater.easybot.config.ConfigLoader;
+import com.springwater.easybot.platforms.ModData;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -27,7 +27,7 @@ public class EasyBotNetworkingThreadPool {
 
         this.managerThread = new Thread(this::dispatchLoop, "EasyBot-NetworkingThreadPool-Manager");
         this.managerThread.start();
-        EasyBotFabric.LOGGER.info("[调度] EasyBot网络线程池已就绪");
+        ModData.LOGGER.info("[调度] EasyBot网络线程池已就绪");
     }
 
     public static synchronized EasyBotNetworkingThreadPool getInstance() {
@@ -42,7 +42,7 @@ public class EasyBotNetworkingThreadPool {
      */
     public void addTask(Runnable task, String taskName) {
         if (!isRunning) {
-            EasyBotFabric.LOGGER.info("管理器已停止，无法添加任务。");
+            ModData.LOGGER.info("管理器已停止，无法添加任务。");
             return;
         }
 
@@ -62,11 +62,11 @@ public class EasyBotNetworkingThreadPool {
             }
         };
         if (ConfigLoader.get().isDebug()) {
-            EasyBotFabric.LOGGER.info("[管理器] 任务 [{}] 已加入队列 (排队数: {})", fullTaskName, taskQueue.size());
+            ModData.LOGGER.info("[管理器] 任务 [{}] 已加入队列 (排队数: {})", fullTaskName, taskQueue.size());
         }
         if (!taskQueue.offer(namedTask)) {
             // 能跑到这里的也是神人环境了
-            EasyBotFabric.LOGGER.error("[管理器] 队列已满, 放弃任务 [{}]", fullTaskName);
+            ModData.LOGGER.error("[管理器] 队列已满, 放弃任务 [{}]", fullTaskName);
         }
     }
 
@@ -81,13 +81,13 @@ public class EasyBotNetworkingThreadPool {
         if (!isRunning) return;
 
         if (ConfigLoader.get().isDebug()) {
-            EasyBotFabric.LOGGER.info("[调度] 任务 [{}] 将在 {} 秒后加入执行队列", taskName, delaySeconds);
+            ModData.LOGGER.info("[调度] 任务 [{}] 将在 {} 秒后加入执行队列", taskName, delaySeconds);
         }
 
         // 使用调度器进行倒计时
         scheduler.schedule(() -> {
             if (ConfigLoader.get().isDebug()) {
-                EasyBotFabric.LOGGER.info("[调度] 任务 [{}] 延迟结束，正在加入主队列...", taskName);
+                ModData.LOGGER.info("[调度] 任务 [{}] 延迟结束，正在加入主队列...", taskName);
             }
             addTask(task, taskName);
         }, delaySeconds, TimeUnit.SECONDS);
@@ -98,16 +98,16 @@ public class EasyBotNetworkingThreadPool {
             try {
                 Runnable task = taskQueue.take();
                 if (ConfigLoader.get().isDebug()) {
-                    EasyBotFabric.LOGGER.info("[调度] 正在分发任务 [{}] 到线程池...", task);
+                    ModData.LOGGER.info("[调度] 正在分发任务 [{}] 到线程池...", task);
                 }
                 workerPool.submit(task);
             } catch (InterruptedException e) {
-                EasyBotFabric.LOGGER.error("管理线程中断，退出...");
+                ModData.LOGGER.error("管理线程中断，退出...");
                 Thread.currentThread().interrupt();
                 break;
             } catch (Exception e) {
-                EasyBotFabric.LOGGER.error("管理线程异常: {}", e.getLocalizedMessage());
-                EasyBotFabric.LOGGER.error(e.toString());
+                ModData.LOGGER.error("管理线程异常: {}", e.getLocalizedMessage());
+                ModData.LOGGER.error(e.toString());
             }
         }
     }
@@ -117,6 +117,6 @@ public class EasyBotNetworkingThreadPool {
         managerThread.interrupt();
         workerPool.shutdown();
         scheduler.shutdown();
-        EasyBotFabric.LOGGER.info(">>> 管理器正在关闭...");
+        ModData.LOGGER.info(">>> 管理器正在关闭...");
     }
 }

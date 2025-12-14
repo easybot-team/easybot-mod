@@ -1,8 +1,7 @@
 package com.springwater.easybot.utils;
-
-import com.springwater.easybot.EasyBotFabric;
 import com.springwater.easybot.bridge.packet.PlayerInfoWithRaw;
-import com.springwater.easybot.mixin.ServerLoginNetworkHandlerAccessor;
+import com.springwater.easybot.platforms.EasyBotModImpl;
+import com.springwater.easybot.platforms.ModData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -16,10 +15,10 @@ public class PlayerUtils {
      * @param reason 理由
      */
     public static void kickPlayerAsync(String name, String reason) {
-        EasyBotFabric.getServer().execute(() -> {
-            ServerPlayer player = EasyBotFabric.getServer().getPlayerList().getPlayerByName(name);
+        EasyBotModImpl.INSTANCE.getServer().execute(() -> {
+            ServerPlayer player = EasyBotModImpl.INSTANCE.getServer().getPlayerList().getPlayerByName(name);
             if (player == null) {
-                EasyBotFabric.LOGGER.warn("踢出玩家失败: 玩家{}不存在", name);
+                ModData.LOGGER.warn("踢出玩家失败: 玩家{}不存在", name);
                 return;
             }
             kickPlayerSync(player, reason);
@@ -50,7 +49,7 @@ public class PlayerUtils {
                 playerInfo.setNameRaw(floodgateInfo.getPlayerName());
                 playerInfo.setUuid(floodgateInfo.getPlayerUuid());
             } else {
-                EasyBotFabric.LOGGER.warn("玩家{}的Floodgate信息获取失败", player.getName().getString());
+                ModData.LOGGER.warn("玩家{}的Floodgate信息获取失败", player.getName().getString());
             }
         }
 

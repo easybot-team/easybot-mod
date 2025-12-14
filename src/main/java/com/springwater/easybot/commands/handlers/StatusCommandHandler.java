@@ -1,9 +1,10 @@
 package com.springwater.easybot.commands.handlers;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.springwater.easybot.EasyBotFabric;
 import com.springwater.easybot.bridge.ClientProfile;
 import com.springwater.easybot.commands.ICommandHandler;
+import com.springwater.easybot.platforms.EasyBotModImpl;
+import com.springwater.easybot.platforms.ModData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -24,17 +25,17 @@ public class StatusCommandHandler implements ICommandHandler {
             root.append(Component.literal("-------------------------------------------------------------")
                     .withStyle(ChatFormatting.GREEN));
 
-            root.append(Component.literal("\n-> EasyBot Fabric V" + EasyBotFabric.VERSION)
+            root.append(Component.literal("\n-> EasyBot Fabric V" + ModData.VERSION)
                     .withStyle(ChatFormatting.GRAY)
                     .withStyle(ChatFormatting.BOLD)); // 可选加粗
             root.append(Component.literal("\n构建信息: MCVersion=")
                     .withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal(EasyBotFabric.MINECRAFT)
+                    .append(Component.literal(ModData.MINECRAFT)
                             .withStyle(ChatFormatting.DARK_GRAY)));
             root.append(Component.literal("\n当前状态: ")
                     .withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal(EasyBotFabric.getBridgeClient().isReady() ? "已连接" : "离线")
-                            .withStyle(EasyBotFabric.getBridgeClient().isReady() ? ChatFormatting.GREEN : ChatFormatting.RED)));
+                    .append(Component.literal(EasyBotModImpl.INSTANCE.getBridgeClient().isReady() ? "已连接" : "离线")
+                            .withStyle(EasyBotModImpl.INSTANCE.getBridgeClient().isReady() ? ChatFormatting.GREEN : ChatFormatting.RED)));
             MutableComponent papiLine = Component.literal("\n依赖[TextPlaceholderAPI] - ")
                     .withStyle(ChatFormatting.GRAY);
             if (ClientProfile.isPapiSupported()) {
@@ -42,7 +43,7 @@ public class StatusCommandHandler implements ICommandHandler {
                         .withStyle(ChatFormatting.GREEN)
                         .append(Component.literal("[API版本: ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(Component.literal(EasyBotFabric.PAPI)
+                                .append(Component.literal(ModData.PAPI)
                                         .withStyle(ChatFormatting.AQUA))
                                 .append(Component.literal("]"))
                         ));
@@ -64,7 +65,7 @@ public class StatusCommandHandler implements ICommandHandler {
             if (context.getSource().isPlayer()) {
                 ServerPlayer player = context.getSource().getPlayer();
                 if (player != null) {
-                    if (EasyBotFabric.getBridgeClient().isReady()) {
+                    if (EasyBotModImpl.INSTANCE.getBridgeClient().isReady()) {
                         player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 1.0F, 1.0F);
                     } else {
                         player.playNotifySound(SoundEvents.VILLAGER_NO, SoundSource.MASTER, 1.0F, 1.0F);

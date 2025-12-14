@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import com.springwater.easybot.EasyBotFabric;
+import com.springwater.easybot.platforms.ModData;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.nio.charset.StandardCharsets;
@@ -21,13 +21,13 @@ public class SkinUtils {
             GameProfile profile = player.getGameProfile();
             // 获取 "textures" 属性
             //? if >1.21.8 {
-            Collection<Property> textures = profile.properties().get("textures");
-            //?} else {
-            /*Collection<Property> textures = profile.getProperties().get("textures");
-             *///?}
+            /*Collection<Property> textures = profile.properties().get("textures");
+            *///?} else {
+            Collection<Property> textures = profile.getProperties().get("textures");
+             //?}
             if (!textures.isEmpty()) {
                 Property property = textures.iterator().next(); // 获取第一个属性
-                //? if >=1.21.1 {
+                //? if >=1.20.2 {
                 String value = property.value();
                 //?} else {
                 /*String value = property.getValue();
@@ -47,9 +47,9 @@ public class SkinUtils {
                 }
             }
         } catch (Exception e) {
-            EasyBotFabric.LOGGER.error("获取皮肤URL时出错: {}", e.getMessage());
+            ModData.LOGGER.error("获取皮肤URL时出错: {}", e.getMessage());
         }
-        EasyBotFabric.LOGGER.warn("获取皮肤URL时出错,已显示默认皮肤");
+        ModData.LOGGER.warn("获取皮肤URL时出错,已显示默认皮肤");
         // 小彩蛋说是
         // 获取失败
         return "http://textures.minecraft.net/texture/284e8bbc52bcc9513ee0bc84de84c34ec44454b0e0174c8df5694cc115c14b8d";

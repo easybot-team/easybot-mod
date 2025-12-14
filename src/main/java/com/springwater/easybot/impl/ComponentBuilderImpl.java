@@ -1,7 +1,6 @@
 package com.springwater.easybot.impl;
-
-import com.springwater.easybot.EasyBotFabric;
 import com.springwater.easybot.bridge.message.*;
+import com.springwater.easybot.platforms.ModData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.*;
 
@@ -29,7 +28,7 @@ public class ComponentBuilderImpl {
 
 
     private static void handleUnknownSegment(MutableComponent component, UnknownSegment segment) {
-        EasyBotFabric.LOGGER.error("[构建消息] 错误: 机器人收到未知字段 [type-{}", segment.getRawText());
+        ModData.LOGGER.error("[构建消息] 错误: 机器人收到未知字段 [type-{}", segment.getRawText());
         component.append(
                 Component.literal("[未知字段]").withStyle(ChatFormatting.GRAY)
         );
@@ -143,8 +142,8 @@ public class ComponentBuilderImpl {
                 try {
                     handler.accept(component, segment);
                 } catch (ClassCastException e) {
-                    EasyBotFabric.LOGGER.error("[构建消息] 错误: 段落类型不匹配 {}", e.getLocalizedMessage());
-                    EasyBotFabric.LOGGER.error(e.toString());
+                    ModData.LOGGER.error("[构建消息] 错误: 段落类型不匹配 {}", e.getLocalizedMessage());
+                    ModData.LOGGER.error(e.toString());
                 }
             }
         }

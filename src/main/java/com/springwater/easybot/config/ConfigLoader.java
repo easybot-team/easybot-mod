@@ -3,8 +3,8 @@ package com.springwater.easybot.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.springwater.easybot.EasyBotFabric;
-import net.fabricmc.loader.api.FabricLoader;
+import com.springwater.easybot.platforms.EasyBotModImpl;
+import com.springwater.easybot.platforms.ModData;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -21,10 +20,10 @@ import java.util.function.Consumer;
  * 负责管理 EasyBotConfig 的加载、保存和热重载逻辑。
  */
 public class ConfigLoader {
-    private static final Logger LOGGER = EasyBotFabric.LOGGER;
+    private static final Logger LOGGER = ModData.LOGGER;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final String CONFIG_FILE_NAME = "config.json";
-    private static final String CONFIG_ROOT_PATH = FabricLoader.getInstance().getConfigDir().resolve(EasyBotFabric.MOD_ID).toString();
+    private static final String CONFIG_ROOT_PATH = EasyBotModImpl.INSTANCE.getConfigDirectory().resolve(ModData.MOD_ID).toString();
     public static final Path CONFIG_PATH = Path.of(CONFIG_ROOT_PATH, CONFIG_FILE_NAME);
     private static final AtomicBoolean isWatcherRunning = new AtomicBoolean(false);
 
@@ -286,24 +285,17 @@ public class ConfigLoader {
     }
 
     private static void createDefaultConfigFromResources() {
-        Optional<Path> resourcePath = FabricLoader.getInstance().getModContainer(EasyBotFabric.MOD_ID).flatMap(container -> container.findPath(CONFIG_FILE_NAME));
-
-        if (resourcePath.isPresent()) {
-            try (InputStream stream = Files.newInputStream(resourcePath.get())) {
+        try (InputStream stream = ConfigLoader.class.getResourceAsStream(CONFIG_FILE_NAME)) {
+            if (stream == null) {
+                LOGGER.warn("未找到默认配置文件，将使用内置配置。");
+                currentConfig = new EasyBotConfig();
+                save();
+            } else {
                 Files.createDirectories(CONFIG_PATH.getParent());
                 Files.copy(stream, CONFIG_PATH, StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                LOGGER.error("从 Jar 复制默认配置失败。", e);
             }
-        } else {
-            LOGGER.warn("Jar 中未找到默认配置模板，生成纯净默认配置。");
-            // 使用默认值创建一个文件
-            try {
-                Files.createDirectories(CONFIG_PATH.getParent());
-                Files.writeString(CONFIG_PATH, GSON.toJson(new EasyBotConfig()));
-            } catch (IOException e) {
-                LOGGER.error("无法写入默认配置。", e);
-            }
+        } catch (IOException e) {
+            LOGGER.error("从 Jar 复制默认配置失败。", e);
         }
     }
 }

@@ -2,9 +2,9 @@ package com.springwater.easybot.commands.handlers;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.springwater.easybot.EasyBotFabric;
 import com.springwater.easybot.bridge.packet.PlayerInfoWithRaw;
 import com.springwater.easybot.commands.ICommandHandler;
+import com.springwater.easybot.platforms.EasyBotModImpl;
 import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
 import com.springwater.easybot.utils.PlayerUtils;
 import net.minecraft.ChatFormatting;
@@ -30,7 +30,7 @@ public class SayCommandHandler implements ICommandHandler {
                                                 context.getSource().sendFailure(Component.literal("请输入要发送的消息").withStyle(ChatFormatting.RED));
                                                 return 0;
                                             }
-                                            if (!EasyBotFabric.getBridgeClient().isReady()) {
+                                            if (!EasyBotModImpl.INSTANCE.getBridgeClient().isReady()) {
                                                 context.getSource().sendFailure(Component.literal("当前服务器处于离线模式").withStyle(ChatFormatting.RED));
                                                 return 0;
                                             }
@@ -46,9 +46,9 @@ public class SayCommandHandler implements ICommandHandler {
                                             }
                                             PlayerInfoWithRaw finalPlayerInfo = playerInfo;
                                             EasyBotNetworkingThreadPool.getInstance().addTask(() -> {
-                                                if (EasyBotFabric.getBridgeClient().isReady()) {
-                                                    EasyBotFabric.getBridgeClient().syncMessage(finalPlayerInfo, message, true);
-                                                    EasyBotFabric.getServer().execute(() -> {
+                                                if (EasyBotModImpl.INSTANCE.getBridgeClient().isReady()) {
+                                                    EasyBotModImpl.INSTANCE.getBridgeClient().syncMessage(finalPlayerInfo, message, true);
+                                                    EasyBotModImpl.INSTANCE.getServer().execute(() -> {
                                                         context.getSource().sendSuccess(() -> Component.literal("您的消息已发送: ").append(Component.literal(message).withStyle(ChatFormatting.GRAY)), true);
                                                         if (context.getSource().isPlayer()) {
                                                             ServerPlayer player = context.getSource().getPlayer();

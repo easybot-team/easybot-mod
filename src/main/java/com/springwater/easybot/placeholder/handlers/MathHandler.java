@@ -3,10 +3,9 @@ package com.springwater.easybot.placeholder.handlers;
 import com.ezylang.evalex.EvaluationException;
 import com.ezylang.evalex.Expression;
 import com.ezylang.evalex.parser.ParseException;
-import com.springwater.easybot.EasyBotFabric;
 import com.springwater.easybot.api.IPlaceholderHandler;
 import com.springwater.easybot.placeholder.PlaceholderManager;
-import com.springwater.easybot.placeholder.TextPlaceholderApiMod;
+import com.springwater.easybot.platforms.ModData;
 import com.springwater.easybot.utils.TextUtils;
 import lombok.SneakyThrows;
 import net.minecraft.server.MinecraftServer;
@@ -47,7 +46,7 @@ public class MathHandler implements IPlaceholderHandler {
                         roundingMode = parsedMode;
                         expressionString = text.substring(underscoreIndex + 1);
                     } catch (Exception e) {
-                        EasyBotFabric.LOGGER.error("解析配置失败: {} {}", text, e);
+                        ModData.LOGGER.error("解析配置失败: {} {}", text, e);
                     }
                 }
             }
@@ -99,12 +98,11 @@ public class MathHandler implements IPlaceholderHandler {
     }
 
     private String replaceDynamic(String text, String playerName, @Nullable ServerPlayer player) {
-        String intermediate = TextPlaceholderApiMod.replacePlaceholders(text, playerName, player);
-        Matcher matcher = PLACEHOLDER_PATTERN.matcher(intermediate);
-        if (!matcher.find()) return intermediate;
+        Matcher matcher = PLACEHOLDER_PATTERN.matcher(text);
+        if (!matcher.find()) return text;
 
         matcher.reset();
-        StringBuilder sb = new StringBuilder(intermediate.length() + 32);
+        StringBuilder sb = new StringBuilder(text.length() + 32);
         while (matcher.find()) {
             String query = "%" + matcher.group(1) + "%";
             String placement = PlaceholderManager.getInstance().replacePlaceholders(query, playerName, player);

@@ -1,9 +1,10 @@
 package com.springwater.easybot.commands.handlers;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.springwater.easybot.EasyBotFabric;
 import com.springwater.easybot.commands.ICommandHandler;
 import com.springwater.easybot.config.ConfigLoader;
+import com.springwater.easybot.platforms.EasyBotModImpl;
+import com.springwater.easybot.platforms.ModData;
 import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -24,7 +25,7 @@ public class BindCommandHandler implements ICommandHandler {
                 LiteralArgumentBuilder.<CommandSourceStack>literal("bind")
                         .executes((context) -> {
                             if (!context.getSource().isPlayer()) {
-                                EasyBotFabric.LOGGER.warn("温馨提示: 无法给控制台绑定账号哦。");
+                                ModData.LOGGER.warn("温馨提示: 无法给控制台绑定账号哦。");
                                 return 1;
                             }
 
@@ -47,18 +48,18 @@ public class BindCommandHandler implements ICommandHandler {
 
                             EasyBotNetworkingThreadPool.getInstance().addTask(() -> {
                                 try {
-                                    if (!EasyBotFabric.getBridgeClient().isReady()) {
+                                    if (!EasyBotModImpl.INSTANCE.getBridgeClient().isReady()) {
                                         sendFailAndCleanup(uuid, "当前服务器不在线");
                                         return;
                                     }
 
-                                    var account = EasyBotFabric.getBridgeClient().getSocialAccount(playerName);
+                                    var account = EasyBotModImpl.INSTANCE.getBridgeClient().getSocialAccount(playerName);
                                     if (!Objects.equals(account.getUuid(), "")) {
                                         sendFailAndCleanup(uuid, "您已经绑定了账号");
                                         return;
                                     }
 
-                                    var pack = EasyBotFabric.getBridgeClient().startBind(playerName);
+                                    var pack = EasyBotModImpl.INSTANCE.getBridgeClient().startBind(playerName);
                                     sendFeedback(uuid, Component.literal(
                                             ConfigLoader.get().getMessage().getBindStart()
                                                     .replace("#code", pack.getCode())
@@ -67,7 +68,7 @@ public class BindCommandHandler implements ICommandHandler {
                                     ));
                                     bindingPlayers.remove(uuid);
                                 } catch (Exception e) {
-                                    EasyBotFabric.LOGGER.error("绑定任务失败: {}", e.getMessage(), e);
+                                    ModData.LOGGER.error("绑定任务失败: {}", e.getMessage(), e);
                                     sendFailAndCleanup(uuid, "服务器内部异常");
                                 }
                             }, "绑定任务");
@@ -87,8 +88,8 @@ public class BindCommandHandler implements ICommandHandler {
     }
 
     private void sendFeedback(UUID uuid, Component component) {
-        EasyBotFabric.getServer().execute(() -> {
-            var player = EasyBotFabric.getServer().getPlayerList().getPlayer(uuid);
+        EasyBotModImpl.INSTANCE.getServer().execute(() -> {
+            var player = EasyBotModImpl.INSTANCE.getServer().getPlayerList().getPlayer(uuid);
             if (player != null) {
                 player.sendSystemMessage(component);
             }

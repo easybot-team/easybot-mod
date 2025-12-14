@@ -2,8 +2,8 @@ package com.springwater.easybot.commands.handlers;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.springwater.easybot.EasyBotFabric;
 import com.springwater.easybot.commands.ICommandHandler;
+import com.springwater.easybot.platforms.ModData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -26,7 +26,7 @@ public class HelpCommandHandler implements ICommandHandler {
                 .withStyle(ChatFormatting.GRAY));
         root.append(Component.literal("\n EasyBot Fabric V")
                 .withStyle(ChatFormatting.GRAY)
-                .append(Component.literal(EasyBotFabric.VERSION)
+                .append(Component.literal(ModData.VERSION)
                         .withStyle(ChatFormatting.GREEN)));
         root.append(buildCommandLine("/easybot help", "获取帮助"));
         root.append(buildCommandLine("/easybot say <消息>", "主动消息同步"));
