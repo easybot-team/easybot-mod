@@ -3,6 +3,7 @@
   "package": "com.springwater.easybot.mixin",
   "compatibilityLevel": "${java}",
   "mixins": [
+    "PlayerListMixin",
     "ServerGamePacketListenerImplMixin",
     "ServerLoginNetworkHandlerAccessor",
     "ServerStatsCounterAccessor"
