@@ -27,9 +27,11 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -50,10 +52,10 @@ public class LegacyForgeEntry {
             new PlayerDeathSyncFeature(),          // 玩家死亡任务(同步消息)
             new PlayerLoginFeature()
     );
+    
     public LegacyForgeEntry() {
-
+        
         LOGGER.info("EasyBot Forge-" + ModData.VERSION + "+" + ModData.MINECRAFT + " 启动中!");
-
         // 注册到 MinecraftForge 全局事件总线 (用于服务器事件等)
         MinecraftForge.EVENT_BUS.register(LegacyForgeEntry.class);
 

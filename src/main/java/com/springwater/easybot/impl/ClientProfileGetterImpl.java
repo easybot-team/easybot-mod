@@ -27,7 +27,7 @@ public class ClientProfileGetterImpl {
         *///?}
         //? legacyforge {        
         ClientProfile.setServerDescription(server.getServerVersion());
-        // }
+        //?}
         ClientProfile.setPluginVersion(ModData.VERSION);
         ClientProfile.setDebugMode(ConfigLoader.get().isDebug());
         ClientProfile.setOnlineMode(server.usesAuthentication()); // usesAuthentication(yarn: IsOnlineMode)
