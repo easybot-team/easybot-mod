@@ -22,3 +22,18 @@ type="required"
 versionRange="${minecraft_range}"
 ordering="NONE"
 side="SERVER"
+
+[[dependencies.${id}]]
+modId="geyser_neoforge"
+type="optional"
+versionRange="[2.2.0-SNAPSHOT,)"
+ordering="NONE"
+side="BOTH"
+
+# 对应 suggest: floodgate
+[[dependencies.${id}]]
+modId="floodgate"
+type="optional"
+versionRange="[2.2.0-SNAPSHOT,)"
+ordering="NONE"
+side="BOTH"

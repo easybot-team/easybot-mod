@@ -15,6 +15,13 @@ public class StatisticHandler implements IPlaceholderHandler {
         return "ez-statistic";
     }
 
+    private static String realTimeStatToJson(ServerPlayer player){
+        //? >= 1.21.11 {
+        /*return ((ServerStatsCounterAccessor) (player.getStats())).easybot$toJson().getAsString();
+        *///?} else {
+        return ((ServerStatsCounterAccessor) (player.getStats())).easybot$toJson();
+        //?}
+    }
     public @Nullable String handle(String argumentWithoutPrefix, String playerName, @Nullable ServerPlayer player) {
         if (!ModFlags.isPlayerStatisticSupported())
             return null;
@@ -22,9 +29,7 @@ public class StatisticHandler implements IPlaceholderHandler {
         if (statisticKey == null) return null;
         var stat = player == null
                 ? StatisticManager.getInstance().getPlayerStat(playerName) :
-                StatisticManager.getInstance().loadPlayerStat(
-                        ((ServerStatsCounterAccessor) (player.getStats())).easybot$toJson()
-                );
+                StatisticManager.getInstance().loadPlayerStat(realTimeStatToJson(player));
         var item = StatisticsParser.getItem(argumentWithoutPrefix);
         var entity = StatisticsParser.getEntity(argumentWithoutPrefix);
         return switch (statisticKey.toLowerCase()) {

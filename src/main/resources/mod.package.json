@@ -1,0 +1,5 @@
+{
+  "loader": "${loader}",
+  "targets": "${targets}",
+  "version": "${version}"
+}

@@ -66,7 +66,7 @@ tasks.shadowJar {
     mergeServiceFiles()
     relocate("javax.websocket", "com.springwater.easybot.libs.javax.websocket")
     relocate("org.eclipse.jetty", "com.springwater.easybot.libs.eclipse.jetty")
-    relocate("com.google.gson", "com.springwater.easybot.libs.com.google.gson")
+    //relocate("com.google.gson", "com.springwater.easybot.libs.com.google.gson")
     relocate("net.minidev", "com.springwater.easybot.libs.net.minidev")
     relocate("com.jayway", "com.springwater.easybot.libs.com.jayway")
     relocate("org.objectweb.asm", "com.springwater.easybot.libs.org.objectweb.asm")
@@ -74,6 +74,7 @@ tasks.shadowJar {
     exclude("META-INF/maven/**")
     exclude("about.html")
     exclude("org/slf4j/**")
+    exclude("com/google/gson/**")
 }
 
 tasks {
@@ -81,26 +82,33 @@ tasks {
         inputs.property("id", project.property("mod.id"))
         inputs.property("name", project.property("mod.name"))
         inputs.property("version", project.property("mod.version"))
-        inputs.property("minecraft", project.property("mod.mc_dep"))
         inputs.property("neoforge", project.property("deps.neoforge"))
-        inputs.property("minecraft_range", project.property("forge.minecraft.range"))
+        inputs.property("minecraft_range", project.property("mod.mc_dep"))
+        inputs.property("minecraft", project.property("mod.mc_dep_display"))
         inputs.property("forge_loader_range", project.property("forge.loader.range"))
+        inputs.property("targets", project.property("mod.support_mc_versions"))
 
         val props = mapOf(
             "id" to project.property("mod.id"),
             "name" to project.property("mod.name"),
             "version" to project.property("mod.version"),
-            "minecraft" to project.property("mod.mc_dep"),
-            "minecraft_range" to project.property("forge.minecraft.range"),
+            "minecraft_range" to project.property("mod.mc_dep"),
+            "minecraft" to project.property("mod.mc_dep_display"),
             "neoforge" to project.property("deps.neoforge"),
-            "forge_loader_range" to project.property("forge.loader.range")
+            "forge_loader_range" to project.property("forge.loader.range"),
+            "loader" to $$"${loader}", // 在实际的构建中, ${loader} 会被替换成 neoforge/legacyforge/fabric
+            "targets" to project.property("mod.support_mc_versions")
         )
 
-        filesMatching(listOf("META-INF/mods.toml", "META-INF/neoforge.mods.toml", "fabric.mod.json")) {
+        filesMatching(listOf("META-INF/mods.toml", "META-INF/neoforge.mods.toml", "fabric.mod.json", "mod.package.json")) {
             expand(props)
         }
 
         //val mixinJava = "JAVA_${requiredJava.majorVersion}"
         //filesMatching("*.mixins.json") { expand("java" to mixinJava) }
     }
+}
+
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
 }

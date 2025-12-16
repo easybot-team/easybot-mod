@@ -70,6 +70,7 @@ public class PlaceholderManager implements IPlaceholderManager {
                     }
                 } catch (Exception e) {
                     ModData.LOGGER.error("PlaceholderApi处理器处理主键 '{}' 时错误: {}", mainKey, e);
+                    ModData.LOGGER.error(e.getCause().toString());
                 }
             }
 

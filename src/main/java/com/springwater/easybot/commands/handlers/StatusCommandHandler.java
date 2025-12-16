@@ -5,6 +5,7 @@ import com.springwater.easybot.bridge.ClientProfile;
 import com.springwater.easybot.commands.ICommandHandler;
 import com.springwater.easybot.platforms.EasyBotModImpl;
 import com.springwater.easybot.platforms.ModData;
+import com.springwater.easybot.utils.PermissionUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -17,7 +18,7 @@ public class StatusCommandHandler implements ICommandHandler {
 
     @Override
     public void register(LiteralArgumentBuilder<CommandSourceStack> stack) {
-        stack.then(LiteralArgumentBuilder.<CommandSourceStack>literal("status").requires((source) -> source.hasPermission(3)).executes((context) -> {
+        stack.then(LiteralArgumentBuilder.<CommandSourceStack>literal("status").requires((source) -> PermissionUtils.hasPermission(source,3)).executes((context) -> {
             CommandSourceStack source = context.getSource();
             MutableComponent root = Component.empty();
 
@@ -25,7 +26,7 @@ public class StatusCommandHandler implements ICommandHandler {
             root.append(Component.literal("-------------------------------------------------------------")
                     .withStyle(ChatFormatting.GREEN));
 
-            root.append(Component.literal("\n-> EasyBot Fabric V" + ModData.VERSION)
+            root.append(Component.literal("\n-> EasyBot "+ ModData.LOADER +" v" + ModData.VERSION)
                     .withStyle(ChatFormatting.GRAY)
                     .withStyle(ChatFormatting.BOLD)); // 可选加粗
             root.append(Component.literal("\n构建信息: MCVersion=")
@@ -66,9 +67,17 @@ public class StatusCommandHandler implements ICommandHandler {
                 ServerPlayer player = context.getSource().getPlayer();
                 if (player != null) {
                     if (EasyBotModImpl.INSTANCE.getBridgeClient().isReady()) {
+                        //? >= 1.21.11 {
+                        /*player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
+                        *///?} else {
                         player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 1.0F, 1.0F);
+                        //?}
                     } else {
+                        //? >= 1.21.11 {
+                        /*player.playSound(SoundEvents.VILLAGER_NO, 1.0F, 1.0F);
+                        *///?} else {
                         player.playNotifySound(SoundEvents.VILLAGER_NO, SoundSource.MASTER, 1.0F, 1.0F);
+                         //?}
                     }
                 }
             }

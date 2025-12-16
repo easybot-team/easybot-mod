@@ -53,7 +53,7 @@ public class NeoForgeEntry {
 
     public NeoForgeEntry(IEventBus modEventBus) {
         LOGGER.info("EasyBot NeoForge-" + ModData.VERSION + "+" + ModData.MINECRAFT + " 启动中!");
-        NeoForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(NeoForgeEntry.class);
         try {
             ConfigLoader.load();
             ConfigLoader.registerOnConfigChanged(this::handleConfigReload);

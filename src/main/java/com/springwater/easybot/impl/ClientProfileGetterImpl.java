@@ -19,13 +19,13 @@ public class ClientProfileGetterImpl {
         *///?}
         //? neoforge {
         /*//? > 1.21.8 {
-        /^ClientProfile.setServerDescription(FMLLoader.getCurrent().getVersionInfo().mcVersion());
-         ^///?}
+        ClientProfile.setServerDescription(FMLLoader.getCurrent().getVersionInfo().mcVersion());
+         //?}
         //? <= 1.21.8 {
-        ClientProfile.setServerDescription(FMLLoader.versionInfo().mcVersion());
-        //?}
+        /^ClientProfile.setServerDescription(FMLLoader.versionInfo().mcVersion());
+        ^///?}
         *///?}
-        //? legacyforge {        
+        //? legacyforge {
         ClientProfile.setServerDescription(server.getServerVersion());
         //?}
         ClientProfile.setPluginVersion(ModData.VERSION);

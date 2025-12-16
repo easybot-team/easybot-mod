@@ -3,7 +3,7 @@ plugins {
     id("net.neoforged.moddev")
 }
 
-version = "neoforge-${property("mod.version")}+${stonecutter.current.version}"
+version = "neoforge-${property("mod.version")}+mc${property("mod.mc_dep_display")}"
 base.archivesName = property("mod.id") as String
 
 val requiredJava = when {
@@ -25,8 +25,8 @@ dependencies {
     compileOnly("maven.modrinth:floodgate:${property("deps.floodgate_version")}")
     shade("com.springwater.easybot:ez-statistic:${property("deps.ez_statistic_version")}") {
         exclude("org.slf4j", "slf4j-api")
-        exclude("net.minidev", "json-smart")
-        exclude("net.minidev", "json-path")
+        //exclude("net.minidev", "json-smart")
+        //exclude("net.minidev", "json-path")
     }
 }
 
@@ -64,6 +64,12 @@ tasks {
         exclude("**/fabric.mod.json", "**/*.accesswidener", "**/mods.toml")
         val mixinJava = "JAVA_${requiredJava.majorVersion}"
         filesMatching("*.mixins.json") { expand("java" to mixinJava) }
+
+        filesMatching("mod.package.json") {
+            expand(
+                "loader" to "neoforge"
+            )
+        }
     }
 
     named("createMinecraftArtifacts") {

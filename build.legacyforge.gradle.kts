@@ -6,7 +6,7 @@ plugins {
     id("net.neoforged.moddev.legacyforge")
 }
 
-version = "legacyforge-${property("mod.version")}+${stonecutter.current.version}"
+version = "forge-${property("mod.version")}+mc${property("mod.mc_dep_display")}"
 base.archivesName = property("mod.id") as String
 
 val requiredJava = when {
@@ -88,6 +88,12 @@ tasks {
             expand("java" to mixinJava)
             // 非常暴力的 refmap 注入办法 没招了 真没招了
             filter { it.replace("\"package\":", "\"refmap\": \"${refmapName}\",\n  \"package\":") }
+        }
+
+        filesMatching("mod.package.json") {
+            expand(
+                "loader" to "legacyforge"
+            )
         }
     }
 

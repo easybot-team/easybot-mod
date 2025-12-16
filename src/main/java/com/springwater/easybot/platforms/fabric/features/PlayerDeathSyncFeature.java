@@ -9,63 +9,9 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.util.HashMap;
-import java.util.Map;
+import static com.springwater.easybot.utils.DamageTypeMappings.DEATH_MESSAGES;
 
 public class PlayerDeathSyncFeature implements IEasyBotFeatures {
-    public static final Map<String, String> DEATH_MESSAGES = new HashMap<>();
-
-    public PlayerDeathSyncFeature() {
-        DEATH_MESSAGES.put("arrow", "%s 被箭射杀");
-        DEATH_MESSAGES.put("trident", "%s 被三叉戟刺死了");
-        DEATH_MESSAGES.put("mob_projectile", "%s 被射杀"); // Shulker子弹等
-        DEATH_MESSAGES.put("spit", "%s 被羊驼啐了一脸唾沫");
-        DEATH_MESSAGES.put("thrown", "%s 被砸死了"); // 雪球、鸡蛋等
-        DEATH_MESSAGES.put("wither_skull", "%s 被凋灵首级射杀");
-        DEATH_MESSAGES.put("explosion", "%s 爆炸了");
-        DEATH_MESSAGES.put("player_explosion", "%s 被玩家炸死了");
-        DEATH_MESSAGES.put("fireworks", "%s 在一声巨响中消失了");
-        DEATH_MESSAGES.put("bad_respawn_point", "%s 被 [即兴游戏设计] 杀死了"); // 床/重生锚爆炸
-        DEATH_MESSAGES.put("wind_charge", "%s 被风弹击杀");
-        DEATH_MESSAGES.put("on_fire", "%s 被烧死了");
-        DEATH_MESSAGES.put("in_fire", "%s 浴火焚身");
-        DEATH_MESSAGES.put("lava", "%s 试图在熔岩里游泳");
-        DEATH_MESSAGES.put("hot_floor", "%s 发现地面是熔岩做的"); // 镁块
-        DEATH_MESSAGES.put("campfire", "%s 走进了营火");
-        DEATH_MESSAGES.put("fireball", "%s 被火球炸死了");
-        DEATH_MESSAGES.put("unattributed_fireball", "%s 被火球炸死了");
-        DEATH_MESSAGES.put("dragon_breath", "%s 被龙息烤熟了");
-        DEATH_MESSAGES.put("fall", "%s 落地过猛");
-        DEATH_MESSAGES.put("fly_into_wall", "%s 感受到了动能"); // 鞘翅撞墙
-        DEATH_MESSAGES.put("in_wall", "%s 在墙里窒息了");
-        DEATH_MESSAGES.put("cramming", "%s 被挤扁了"); // 实体挤压
-        DEATH_MESSAGES.put("drown", "%s 淹死了");
-        DEATH_MESSAGES.put("starve", "%s 饿死了");
-        DEATH_MESSAGES.put("cactus", "%s 被刺死了");
-        DEATH_MESSAGES.put("sweet_berry_bush", "%s 被甜浆果丛刺死了");
-        DEATH_MESSAGES.put("freeze", "%s 冻死了"); // 粉状雪
-        DEATH_MESSAGES.put("stalagmite", "%s 被石笋刺穿了"); // 落在滴水石锥上
-        DEATH_MESSAGES.put("lightning_bolt", "%s 被闪电劈死了");
-        DEATH_MESSAGES.put("falling_block", "%s 被下落的方块压扁了");
-        DEATH_MESSAGES.put("falling_anvil", "%s 被下落的铁砧压扁了");
-        DEATH_MESSAGES.put("falling_stalactite", "%s 被下落的钟乳石刺穿了");
-        DEATH_MESSAGES.put("magic", "%s 被魔法杀死了");
-        DEATH_MESSAGES.put("indirect_magic", "%s 被魔法杀死了"); // 药水等
-        DEATH_MESSAGES.put("wither", "%s 凋零了");
-        DEATH_MESSAGES.put("thorns", "%s 在试图伤害敌人时被杀"); // 荆棘/守卫者尖刺
-        DEATH_MESSAGES.put("sonic_boom", "%s 被一声尖啸不仅震碎了耳膜，还震碎了身躯"); // 监守者
-        DEATH_MESSAGES.put("mob_attack", "%s 被怪物杀死了");
-        DEATH_MESSAGES.put("mob_attack_no_aggro", "%s 被猛撞而死"); // 山羊撞击
-        DEATH_MESSAGES.put("player_attack", "%s 被玩家杀死了");
-        DEATH_MESSAGES.put("sting", "%s 被蛰死了");
-        DEATH_MESSAGES.put("mace_smash", "%s 被重锤砸扁了");
-        DEATH_MESSAGES.put("out_of_world", "%s 掉出了这个世界"); // 虚空
-        DEATH_MESSAGES.put("outside_border", "%s 离开了这个世界的边缘"); // 世界边界
-        DEATH_MESSAGES.put("generic", "%s 死了");
-        DEATH_MESSAGES.put("generic_kill", "%s 死了"); // /kill 指令
-        DEATH_MESSAGES.put("dry_out", "%s 脱水了"); // 鱼/美西螈离开水
-        DEATH_MESSAGES.put("ender_pearl", "%s 因投掷末影珍珠而死"); // 通常显示为落地过猛，但区分开写更准确
-    }
 
     @Override
     public void register() {
@@ -75,17 +21,29 @@ public class PlayerDeathSyncFeature implements IEasyBotFeatures {
                 var profile = PlayerUtils.getPlayerInfo(player);
                 var killer = new StringBuilder();
                 var deathReason = new StringBuilder();
-                if (source.getEntity() instanceof LivingEntity livingEntity) {
+
+                var key = source.typeHolder().unwrapKey();
+                //? >=1.21.11 {
+                /^if (key.isPresent() && !key.get().identifier().getPath().equals("mob_attack")) {
+                ^///?} else {
+                if (key.isPresent() && !key.get().location().getPath().equals("mob_attack")) {
+                 //?}
+                    //? >=1.21.11 {
+                    /^var path = key.get().identifier().getPath();
+                    ^///?} else {
+                    var path = key.get().location().getPath();
+                     //?}
+                    if (player.getKillCredit() != null) {
+                        killer.append(getKillerName(player.getKillCredit()));
+                    } else {
+                        killer.append("一股神秘的力量");
+                    }
+                    deathReason.append(DEATH_MESSAGES.getOrDefault(path, "%s 死了").replace("%s", profile.name));
+                }else if (source.getEntity() instanceof LivingEntity livingEntity) {
                     killer.append(getKillerName(livingEntity));
                     deathReason.append(profile.name).append(" 被 ").append(killer).append(" 杀死了");
-                } else {
-                    var key = source.typeHolder().unwrapKey();
-                    if (key.isPresent()) {
-                        var path = key.get().location().getPath();
-                        if (player.getKillCredit() != null) killer.append(getKillerName(player.getKillCredit()));
-                        else killer.append("一股神秘的力量");
-                        deathReason.append(DEATH_MESSAGES.getOrDefault(path, "%s 死了").replace("%s", profile.name));
-                    }
+                }else{
+                    deathReason.append(profile.name).append(" 死了");
                 }
                 EasyBotNetworkingThreadPool.getInstance().addTask(() -> EasyBotModImpl.INSTANCE.getBridgeClient().syncDeathMessage(profile, deathReason.toString(), killer.toString()), "消息同步-死亡");
             }

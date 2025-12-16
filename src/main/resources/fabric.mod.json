@@ -25,7 +25,7 @@
   "accessWidener": "easybot.accesswidener",
   "depends": {
     "fabricloader": ">=0.17",
-    "minecraft": "${minecraft}"
+    "minecraft": "${minecraft_range}"
   },
   "suggests": {
     "text-placeholder-api": ">=2.0.0",

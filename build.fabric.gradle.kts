@@ -3,7 +3,7 @@ plugins {
     id("fabric-loom")
 }
 
-version = "fabric-${property("mod.version")}+${stonecutter.current.version}"
+version = "fabric-${property("mod.version")}+mc${property("mod.mc_dep_display")}"
 base.archivesName = property("mod.id") as String
 
 val requiredJava = when {
@@ -86,6 +86,12 @@ tasks {
         exclude("**/neoforge.mods.toml", "**/mods.toml")
         val mixinJava = "JAVA_${requiredJava.majorVersion}"
         filesMatching("*.mixins.json") { expand("java" to mixinJava) }
+
+        filesMatching("mod.package.json") {
+            expand(
+                "loader" to "fabric"
+            )
+        }
     }
 
     // 打包后的文件会在 `build/libs/${mod version}/`

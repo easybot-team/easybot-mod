@@ -3,6 +3,7 @@ package com.springwater.easybot.commands.handlers;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.springwater.easybot.commands.ICommandHandler;
 import com.springwater.easybot.config.ConfigLoader;
+import com.springwater.easybot.utils.PermissionUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -22,7 +23,7 @@ public class ReloadCommandHandler implements ICommandHandler {
     @Override
     public void register(LiteralArgumentBuilder<CommandSourceStack> stack) {
         stack.then(LiteralArgumentBuilder.<CommandSourceStack>literal("reload")
-                .requires(source -> source.hasPermission(3))
+                .requires(source -> PermissionUtils.hasPermission(source,3))
                 .executes(context -> {
                     CommandSourceStack source = context.getSource();
                     if (isReloading.get()) {
@@ -85,13 +86,21 @@ public class ReloadCommandHandler implements ICommandHandler {
                             Component.literal("配置已重载 ").withStyle(ChatFormatting.GREEN)
                                     .append(Component.literal("[自动热重载已生效]").withStyle(ChatFormatting.GRAY))
                     );
+                    //? >= 1.21.11 {
+                    /*player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
+                    *///?} else {
                     player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 1.0F, 1.0F);
+                     //?}
                 } else {
                     player.sendSystemMessage(
                             Component.literal("重载失败: ").withStyle(ChatFormatting.RED)
                                     .append(Component.literal(errorMessage).withStyle(ChatFormatting.YELLOW))
                     );
+                    //? >= 1.21.11 {
+                    /*player.playSound(SoundEvents.VILLAGER_NO, 1.0F, 1.0F);
+                    *///?} else {
                     player.playNotifySound(SoundEvents.VILLAGER_NO, SoundSource.MASTER, 1.0F, 1.0F);
+                     //?}
                 }
             }
         }
