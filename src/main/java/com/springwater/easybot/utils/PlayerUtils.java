@@ -40,7 +40,7 @@ public class PlayerUtils {
         playerInfo.setNameRaw(player.getName().getString());
         playerInfo.setUuid(player.getUUID().toString());
         var remoteAddress = (InetSocketAddress)player.connection.getRemoteAddress();
-        playerInfo.setIp(remoteAddress.getHostName());
+        playerInfo.setIp(remoteAddress.getAddress().getHostAddress());
 
         if (FloodgateUtils.isFloodgatePlayer(player.getUUID())) {
             var floodgateInfo = FloodgateUtils.getFloodgatePlayerInfo(player.getUUID());

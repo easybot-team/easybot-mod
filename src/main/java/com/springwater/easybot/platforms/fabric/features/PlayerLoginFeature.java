@@ -42,7 +42,7 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
                     return;
                 }
                 var remoteAddress = (InetSocketAddress) ((ServerLoginNetworkHandlerAccessor) handler).GetConnection().getRemoteAddress();
-                EasyBotModImpl.INSTANCE.getBridgeClient().reportPlayer(name, uuid.toString(), remoteAddress.getHostName());
+                EasyBotModImpl.INSTANCE.getBridgeClient().reportPlayer(name, uuid.toString(), remoteAddress.getAddress().getHostAddress());
                 try {
                     var resp = EasyBotModImpl.INSTANCE.getBridgeClient().login(name, uuid.toString());
                     if (resp.getKick()) {

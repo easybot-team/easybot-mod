@@ -77,7 +77,7 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
             }
 
             var remoteAddress = (InetSocketAddress) listener.getConnection().getRemoteAddress();
-            String hostName = remoteAddress.getHostName();
+            String hostName = remoteAddress.getAddress().getHostAddress();
 
             EasyBotModImpl.INSTANCE.getBridgeClient().reportPlayer(name, uuid.toString(), hostName);
 
@@ -150,7 +150,7 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
             }
 
             var remoteAddress = (InetSocketAddress) listener.getConnection().getRemoteAddress();
-            String hostName = remoteAddress.getHostName();
+            String hostName = remoteAddress.getAddress().getHostAddress();
 
             EasyBotModImpl.INSTANCE.getBridgeClient().reportPlayer(name, uuid.toString(), hostName);
 

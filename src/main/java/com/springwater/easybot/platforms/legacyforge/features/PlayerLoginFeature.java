@@ -49,7 +49,7 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
             return handleError("当前服务器未连接到主程序");
         }
         var remoteAddress = (InetSocketAddress) address;
-        String hostName = (remoteAddress != null) ? remoteAddress.getHostName() : "unknown";
+        String hostName = (remoteAddress != null) ? remoteAddress.getAddress().getHostAddress() : "unknown";
         LegacyForgeEntry.getBridgeClient().reportPlayer(name, uuid.toString(), hostName);
         try {
             var resp = LegacyForgeEntry.getBridgeClient().login(name, uuid.toString());
