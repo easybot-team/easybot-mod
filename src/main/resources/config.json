@@ -1,5 +1,5 @@
 {
-  "token": "YOUR_TOKEN_HERE",
+  "token": "",
   "ws": "ws://127.0.0.1:26990/bridge",
   "debug": false,
   "ignoreError": false,

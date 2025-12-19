@@ -57,7 +57,7 @@ public class ConfigLoader {
         LOGGER.warn("检测到 Token 为空！");
         LOGGER.warn("请打开配置文件: {}", CONFIG_PATH.toAbsolutePath());
         LOGGER.warn("填入 Token 并保存文件，程序将自动继续运行...");
-        LOGGER.warn("配置教程: https://docs.inectar.cn/docs/easybot/quick_start/plugin/fabric/install_fabric");
+        LOGGER.warn("配置教程: https://docs.inectar.cn/docs/easybot/quick_start/plugin/mod/install_mod");
 
         try (WatchService watcher = FileSystems.getDefault().newWatchService()) {
             Path parentDir = CONFIG_PATH.getParent();
