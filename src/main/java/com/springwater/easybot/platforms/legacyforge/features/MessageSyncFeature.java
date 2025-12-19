@@ -1,5 +1,5 @@
 //? legacyforge {
-package com.springwater.easybot.platforms.legacyforge.features;
+/*package com.springwater.easybot.platforms.legacyforge.features;
 
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.features.IEasyBotFeatures;
@@ -32,4 +32,4 @@ public class MessageSyncFeature implements IEasyBotFeatures {
                 LegacyForgeEntry.getBridgeClient().syncMessage(playerInfo, message, false), "消息同步");
     }
 }
-//?}
+*///?}

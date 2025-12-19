@@ -1,5 +1,5 @@
 //? legacyforge {
-package com.springwater.easybot.platforms.legacyforge.features;
+/*package com.springwater.easybot.platforms.legacyforge.features;
 
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.features.IEasyBotFeatures;
@@ -48,4 +48,4 @@ public class LoginEventSyncFeature implements IEasyBotFeatures {
                 LegacyForgeEntry.getBridgeClient().syncEnterExit(playerInfo, false), "消息同步-退服");
     }
 }
-//?}
+*///?}

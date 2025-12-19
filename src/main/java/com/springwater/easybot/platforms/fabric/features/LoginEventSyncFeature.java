@@ -1,9 +1,11 @@
 //? fabric {
-/*package com.springwater.easybot.platforms.fabric.features;
+package com.springwater.easybot.platforms.fabric.features;
+
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.features.IEasyBotFeatures;
 import com.springwater.easybot.platforms.EasyBotModImpl;
 import com.springwater.easybot.platforms.ModData;
+import com.springwater.easybot.utils.CarpetUtils;
 import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
 import com.springwater.easybot.utils.PlayerUtils;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -13,6 +15,13 @@ public class LoginEventSyncFeature implements IEasyBotFeatures {
     public void register() {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             var player = handler.getPlayer();
+            if (CarpetUtils.isFakePlayer(player)) {
+                if (ConfigLoader.get().isDebug()) {
+                    ModData.LOGGER.info("已过滤地毯假人 {}", player.getName().getString());
+                }
+                return;
+            }
+
             if (ConfigLoader.get().getSkipOptions().isSkipJoin()) return;
             if (!EasyBotModImpl.INSTANCE.getBridgeClient().isReady()) {
                 ModData.LOGGER.warn("玩家取消玩家上线同步,因为服务器未连接主程序");
@@ -24,6 +33,13 @@ public class LoginEventSyncFeature implements IEasyBotFeatures {
 
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             var player = handler.getPlayer();
+            if (CarpetUtils.isFakePlayer(player)) {
+                if (ConfigLoader.get().isDebug()) {
+                    //noinspection LoggingSimilarMessage
+                    ModData.LOGGER.info("已过滤地毯假人 {}", player.getName().getString());
+                }
+                return;
+            }
             if (ConfigLoader.get().getSkipOptions().isSkipQuit()) return;
             if (!EasyBotModImpl.INSTANCE.getBridgeClient().isReady()) {
                 ModData.LOGGER.warn("玩家取消玩家下线同步,因为服务器未连接主程序");
@@ -34,4 +50,4 @@ public class LoginEventSyncFeature implements IEasyBotFeatures {
         });
     }
 }
-*///?}
+//?}

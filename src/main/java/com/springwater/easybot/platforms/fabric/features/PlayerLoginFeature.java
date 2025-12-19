@@ -1,5 +1,6 @@
 //? fabric {
-/*package com.springwater.easybot.platforms.fabric.features;
+package com.springwater.easybot.platforms.fabric.features;
+
 import com.springwater.easybot.bridge.model.PlayerInfo;
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.features.IEasyBotFeatures;
@@ -35,7 +36,7 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
 
                 // 缓存玩家信息
                 StatisticManager.getInstance().getStatDb().putUuidCache(name, uuid);
-                
+
                 if (!EasyBotModImpl.INSTANCE.getBridgeClient().isReady()) {
                     handleError(handler, "当前服务器未连接到主程序");
                     return;
@@ -65,4 +66,4 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
         handler.disconnect(Component.literal("§c服务器内部异常,请稍后重试!"));
     }
 }
-*///?}
+//?}

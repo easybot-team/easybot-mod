@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
 //? legacyforge {
-import net.minecraft.network.chat.PlayerChatMessage;
+/*import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraftforge.event.ServerChatEvent;
 @Mixin(ServerGamePacketListenerImpl.class)
@@ -20,9 +20,9 @@ public class ServerGamePacketListenerImplMixin {
         }
     }
 }
-//?} else {
-/*import net.minecraft.server.MinecraftServer;
+*///?} else {
+import net.minecraft.server.MinecraftServer;
 @Mixin(MinecraftServer.class)
 public class ServerGamePacketListenerImplMixin {
 }
-*///?}
+//?}

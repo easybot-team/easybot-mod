@@ -11,8 +11,8 @@ import com.springwater.easybot.platforms.EasyBotModImpl;
 import com.springwater.easybot.platforms.ModData;
 import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
 //? fabric {
-/*import com.springwater.easybot.platforms.fabric.utils.FabricLoaderUtils;
-*///?}
+import com.springwater.easybot.platforms.fabric.utils.FabricLoaderUtils;
+//?}
 import com.springwater.easybot.utils.PlayerInfoUtils;
 import com.springwater.easybot.utils.PlayerUtils;
 import net.minecraft.network.chat.Component;
@@ -64,14 +64,14 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
         // 主程序真正获取服务器信息的地方
         ServerInfo info = new ServerInfo();
         //? fabric {
-        /*info.setServerName(FabricLoaderUtils.isQuilt() ? "Quilt" : "Fabric");
-        *///?}
+        info.setServerName(FabricLoaderUtils.isQuilt() ? "Quilt" : "Fabric");
+        //?}
         //? neoforge {
         /*info.setServerName("NeoForge");
         *///?}
         //? legacyforge {
-        info.setServerName("Forge");
-         //?}
+        /*info.setServerName("Forge");
+         *///?}
         info.setServerVersion(EasyBotModImpl.INSTANCE.getServer().getServerVersion());
         info.setPluginVersion(ModData.VERSION);
         info.setCommandSupported(ClientProfile.isCommandSupported());

@@ -1,5 +1,5 @@
 //? legacyforge {
-package com.springwater.easybot.platforms.legacyforge;
+/*package com.springwater.easybot.platforms.legacyforge;
 
 import com.springwater.easybot.bridge.BridgeClient;
 import com.springwater.easybot.platforms.EasyBotModImpl;
@@ -44,4 +44,4 @@ public class LegacyForgeModImpl implements EasyBotModImpl {
         return LegacyForgeEntry.getBridgeClient();
     }
 }
-//?}
+*///?}

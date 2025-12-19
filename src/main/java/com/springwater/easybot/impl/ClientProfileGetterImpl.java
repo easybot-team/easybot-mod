@@ -4,8 +4,8 @@ import com.springwater.easybot.bridge.ClientProfile;
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.platforms.ModData;
 //? fabric {
-/*import net.fabricmc.loader.api.FabricLoader;
- *///?}
+import net.fabricmc.loader.api.FabricLoader;
+ //?}
 import net.minecraft.server.MinecraftServer;
 //? neoforge {
 /*import net.neoforged.fml.loading.FMLLoader;
@@ -14,9 +14,9 @@ import net.minecraft.server.MinecraftServer;
 public class ClientProfileGetterImpl {
     public void BuildClientProfile(MinecraftServer server) {
         //? fabric {
-        /*FabricLoader fabricLoader = FabricLoader.getInstance();
+        FabricLoader fabricLoader = FabricLoader.getInstance();
         ClientProfile.setServerDescription(fabricLoader.getRawGameVersion());
-        *///?}
+        //?}
         //? neoforge {
         /*//? > 1.21.8 {
         ClientProfile.setServerDescription(FMLLoader.getCurrent().getVersionInfo().mcVersion());
@@ -26,8 +26,8 @@ public class ClientProfileGetterImpl {
         ^///?}
         *///?}
         //? legacyforge {
-        ClientProfile.setServerDescription(server.getServerVersion());
-        //?}
+        /*ClientProfile.setServerDescription(server.getServerVersion());
+        *///?}
         ClientProfile.setPluginVersion(ModData.VERSION);
         ClientProfile.setDebugMode(ConfigLoader.get().isDebug());
         ClientProfile.setOnlineMode(server.usesAuthentication()); // usesAuthentication(yarn: IsOnlineMode)

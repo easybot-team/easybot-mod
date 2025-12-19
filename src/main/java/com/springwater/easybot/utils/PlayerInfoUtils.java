@@ -7,7 +7,7 @@ import java.util.List;
 
 public class PlayerInfoUtils {
     public static List<PlayerInfo> buildPlayerInfoList(List<ServerPlayer> players) {
-        return players.stream().map(player -> {
+        return players.stream().filter(player -> !CarpetUtils.isFakePlayer(player)).map(player -> {
             PlayerInfo playerInfo = new PlayerInfo();
             playerInfo.setPlayerName(player.getName().getString());
             playerInfo.setPlayerUuid(player.getUUID().toString());

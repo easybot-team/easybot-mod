@@ -1,5 +1,5 @@
 //? legacyforge {
-package com.springwater.easybot.platforms.legacyforge.features;
+/*package com.springwater.easybot.platforms.legacyforge.features;
 
 import com.mojang.authlib.GameProfile;
 import com.springwater.easybot.bridge.model.PlayerInfo;
@@ -23,8 +23,8 @@ import java.util.UUID;
 //? if >=1.19 {
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 //?} else {
-/*import net.minecraftforge.event.entity.EntityJoinWorldEvent;
- *///?}
+/^import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+ ^///?}
 
 public class PlayerLoginFeature implements IEasyBotFeatures {
 
@@ -72,4 +72,4 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
         return Component.literal("§c服务器内部异常,请稍后重试!");
     }
 }
-//?}
+*///?}

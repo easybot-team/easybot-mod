@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import java.net.SocketAddress;
 
 //? legacyforge {
-import com.springwater.easybot.platforms.legacyforge.features.PlayerLoginFeature;
+/*import com.springwater.easybot.platforms.legacyforge.features.PlayerLoginFeature;
 import com.mojang.authlib.GameProfile;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.network.chat.Component;
@@ -21,9 +21,9 @@ public class PlayerListMixin {
         }
     }
 }
-//?} else {
-/*import net.minecraft.server.MinecraftServer;
+*///?} else {
+import net.minecraft.server.MinecraftServer;
 @Mixin(PlayerList.class)
 public class PlayerListMixin {
 }
-*///?}
+//?}

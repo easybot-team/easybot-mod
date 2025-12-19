@@ -1,8 +1,11 @@
 //? fabric {
-/*package com.springwater.easybot.platforms.fabric.features;
+package com.springwater.easybot.platforms.fabric.features;
+
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.features.IEasyBotFeatures;
 import com.springwater.easybot.platforms.EasyBotModImpl;
+import com.springwater.easybot.platforms.ModData;
+import com.springwater.easybot.utils.CarpetUtils;
 import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
 import com.springwater.easybot.utils.PlayerUtils;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -18,31 +21,38 @@ public class PlayerDeathSyncFeature implements IEasyBotFeatures {
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
             if (ConfigLoader.get().getSkipOptions().isSkipDeath()) return;
             if (entity instanceof ServerPlayer player) {
+                if (CarpetUtils.isFakePlayer(player)) {
+                    if (ConfigLoader.get().isDebug()) {
+                        ModData.LOGGER.info("已过滤地毯假人 {}", player.getName().getString());
+                    }
+                    return;
+                }
+
                 var profile = PlayerUtils.getPlayerInfo(player);
                 var killer = new StringBuilder();
                 var deathReason = new StringBuilder();
 
                 var key = source.typeHolder().unwrapKey();
                 //? >=1.21.11 {
-                /^if (key.isPresent() && !key.get().identifier().getPath().equals("mob_attack")) {
-                ^///?} else {
+                /*if (key.isPresent() && !key.get().identifier().getPath().equals("mob_attack")) {
+                 *///?} else {
                 if (key.isPresent() && !key.get().location().getPath().equals("mob_attack")) {
-                 //?}
+                    //?}
                     //? >=1.21.11 {
-                    /^var path = key.get().identifier().getPath();
-                    ^///?} else {
+                    /*var path = key.get().identifier().getPath();
+                     *///?} else {
                     var path = key.get().location().getPath();
-                     //?}
+                    //?}
                     if (player.getKillCredit() != null) {
                         killer.append(getKillerName(player.getKillCredit()));
                     } else {
                         killer.append("一股神秘的力量");
                     }
                     deathReason.append(DEATH_MESSAGES.getOrDefault(path, "%s 死了").replace("%s", profile.name));
-                }else if (source.getEntity() instanceof LivingEntity livingEntity) {
+                } else if (source.getEntity() instanceof LivingEntity livingEntity) {
                     killer.append(getKillerName(livingEntity));
                     deathReason.append(profile.name).append(" 被 ").append(killer).append(" 杀死了");
-                }else{
+                } else {
                     deathReason.append(profile.name).append(" 死了");
                 }
                 EasyBotNetworkingThreadPool.getInstance().addTask(() -> EasyBotModImpl.INSTANCE.getBridgeClient().syncDeathMessage(profile, deathReason.toString(), killer.toString()), "消息同步-死亡");
@@ -55,4 +65,4 @@ public class PlayerDeathSyncFeature implements IEasyBotFeatures {
         return entity.getName().getString();
     }
 }
-*///?}
+//?}
