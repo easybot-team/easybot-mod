@@ -20,16 +20,16 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 //? >1.20.4 {
-import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
+/^import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.network.ConfigurationTask;
- //?}
+ ^///?}
 
 //? <=1.20.4 {
-/^import net.neoforged.neoforge.network.event.OnGameConfigurationEvent;
+import net.neoforged.neoforge.network.event.OnGameConfigurationEvent;
 import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-^///?}
+//?}
 
 
 public class PlayerLoginFeature implements IEasyBotFeatures {
@@ -39,7 +39,7 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
     }
 
     //? <=1.20.4 {
-    /^@SubscribeEvent
+    @SubscribeEvent
     public void onRegisterConfigurationTasks(OnGameConfigurationEvent event) {
         event.register(new EasyBotLoginCheckTask((ServerConfigurationPacketListenerImpl) event.getListener()));
     }
@@ -107,12 +107,12 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
             return TYPE;
         }
     }
-    ^///?}
+    //?}
     
     
     //? >1.20.4 {
     
-    @SubscribeEvent
+    /^@SubscribeEvent
     public void onRegisterConfigurationTasks(RegisterConfigurationTasksEvent event) {
         event.register(new EasyBotLoginCheckTask((ServerConfigurationPacketListenerImpl) event.getListener()));
     }
@@ -180,6 +180,6 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
             return TYPE;
         }
     }
-    //?}
+    ^///?}
 }
 *///?}
