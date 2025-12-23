@@ -35,7 +35,7 @@ public class TextPlaceholderApiMod {
             String content = matcher.group(1);
             String fullKey = "%" + content + "%";
             String replacement = PlaceholderApiMappings.PLACEHOLDER_API_MAPPINGS.get(fullKey);
-            if ("%player:name%".equals(replacement)) {
+            if ("%player:name%".equals(replacement) || "%player_name%".equals(replacement)) {
                 replacement = playerName;
             }
 
