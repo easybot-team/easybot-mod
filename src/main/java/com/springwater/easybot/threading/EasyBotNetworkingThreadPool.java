@@ -20,9 +20,16 @@ public class EasyBotNetworkingThreadPool {
     private static EasyBotNetworkingThreadPool instance;
 
     private EasyBotNetworkingThreadPool() {
-        this.taskQueue = new LinkedBlockingQueue<>();
-        // 3个工作线程
-        this.workerPool = Executors.newFixedThreadPool(3);
+        this.taskQueue = new LinkedBlockingQueue<>(100); // 有限容量队列，防止内存溢出
+        // 动态线程池：核心线程数2，最大线程数8，空闲线程存活60秒
+        this.workerPool = new ThreadPoolExecutor(
+            2, // 核心线程数
+            8, // 最大线程数
+            60L, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(50),
+            r -> new Thread(r, "EasyBot-Networking-Worker"),
+            new ThreadPoolExecutor.CallerRunsPolicy()
+        );
         this.scheduler = Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "EasyBot-Networking-Scheduler"));
 
         this.managerThread = new Thread(this::dispatchLoop, "EasyBot-NetworkingThreadPool-Manager");

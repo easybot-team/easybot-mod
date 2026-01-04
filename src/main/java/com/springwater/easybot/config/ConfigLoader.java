@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -30,8 +30,11 @@ public class ConfigLoader {
     // 当前正在使用的配置实例
     private static EasyBotConfig currentConfig;
 
-    // 配置变更监听器列表
-    private static final List<Consumer<EasyBotConfig>> listeners = new ArrayList<>();
+    // 配置变更监听器列表（线程安全）
+    private static final List<Consumer<EasyBotConfig>> listeners = new CopyOnWriteArrayList<>();
+    
+    // 文件内容哈希缓存，用于避免不必要的配置重载
+    private static long lastFileHash = 0;
 
     /**
      * 获取当前配置实例。如果尚未加载会直接报错
@@ -136,6 +139,7 @@ public class ConfigLoader {
 
         String content = Files.readString(CONFIG_PATH);
         currentConfig = GSON.fromJson(content, EasyBotConfig.class);
+        lastFileHash = content.hashCode(); // 初始化文件哈希缓存
         LOGGER.info("配置加载成功。");
     }
 
@@ -151,11 +155,20 @@ public class ConfigLoader {
 
         try {
             String content = Files.readString(CONFIG_PATH);
+            long currentHash = content.hashCode();
+            
+            // 检查文件内容是否变化，避免不必要的重载
+            if (currentHash == lastFileHash) {
+                LOGGER.debug("配置文件内容未变化，跳过重载");
+                return;
+            }
+            
             EasyBotConfig newConfig = GSON.fromJson(content, EasyBotConfig.class);
             if (newConfig == null) {
                 throw new JsonSyntaxException("解析结果为 null");
             }
             currentConfig = newConfig;
+            lastFileHash = currentHash; // 更新哈希缓存
             LOGGER.info("配置热重载成功！");
             notifyListeners();
         } catch (JsonSyntaxException e) {

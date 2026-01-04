@@ -4,6 +4,9 @@
 build/
 out/
 classes/
+.trae
+buildSrc/.gradle
+buildSrc/build
 
 # eclipse
 
