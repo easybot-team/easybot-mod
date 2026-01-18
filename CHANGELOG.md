@@ -1,8 +1,7 @@
 ### 0.1.0-rc.6
 
-> optimize: 优化网络线程池和热重载逻辑
-
-> gitignore: 更新gitignore
+- optimize: 优化网络线程池和热重载逻辑
+- fix: 修复Fabric部分版本与其他MOD冲突导致消息同步不生效的问题
 
 ### 0.1.0-rc.5
 

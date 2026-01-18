@@ -54,7 +54,6 @@ public class FabricEntry implements ModInitializer {
     private static final List<IEasyBotFeatures> features = List.of(
             new PlayerLoginFeature(),             // 玩家登陆任务(强制绑定触发器)
             new LoginEventSyncFeature(),          // 消息同步接口(进入退出)
-            new MessageSyncFeature(),             // 消息同步接口
             new PlayerDeathSyncFeature()          // 玩家死亡任务(同步消息)
     );
 

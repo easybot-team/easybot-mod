@@ -1,4 +1,5 @@
 package com.springwater.easybot.mixin;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,9 +21,23 @@ public class ServerGamePacketListenerImplMixin {
         }
     }
 }
-*///?} else {
-import net.minecraft.server.MinecraftServer;
+*///?} else if fabric {
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.network.chat.PlayerChatMessage;
+
+@Mixin(ServerGamePacketListenerImpl.class)
+public class ServerGamePacketListenerImplMixin {
+    @Inject(method = "broadcastChatMessage", at = @At("HEAD"))
+    private void onBroadcastChatMessage(PlayerChatMessage message, CallbackInfo ci) {
+        var player = ((ServerGamePacketListenerImpl) (Object) this).player;
+        if (!message.isSystem()) {
+            com.springwater.easybot.platforms.fabric.features.MessageSyncFeature.onChatMessage(message, player);
+        }
+    }
+}
+//?} else {
+/*import net.minecraft.server.MinecraftServer;
 @Mixin(MinecraftServer.class)
 public class ServerGamePacketListenerImplMixin {
 }
-//?}
+*///?}
