@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * EasyBot网络请求专用线程池
  */
+@SuppressWarnings({"LoggingSimilarMessage", "DuplicatedCode"}) // 忽略重复消息
 public class EasyBotNetworkingThreadPool {
     // 核心线程数
     private static final int CORE_POOL_SIZE = Runtime.getRuntime().availableProcessors();
@@ -172,16 +173,5 @@ public class EasyBotNetworkingThreadPool {
         workerPool.shutdown();
         scheduler.shutdown();
         ModData.LOGGER.info(">>> 管理器正在关闭...");
-    }
-
-    /**
-     * 获取当前线程池状态信息
-     */
-    public String getStatusInfo() {
-        return String.format("线程池状态: 活跃线程数=%d, 队列大小=%d, 已完成任务数=%d, 总任务数=%d",
-                workerPool.getActiveCount(),
-                workerPool.getQueue().size(),
-                workerPool.getCompletedTaskCount(),
-                workerPool.getTaskCount());
     }
 }
