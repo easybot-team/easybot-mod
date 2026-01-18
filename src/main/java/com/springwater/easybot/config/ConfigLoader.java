@@ -29,6 +29,8 @@ public class ConfigLoader {
 
     // 当前正在使用的配置实例
     private static EasyBotConfig currentConfig;
+    // 配置内容哈希值，用于检测文件是否真正变化
+    private static long lastConfigHash = 0;
 
     // 配置变更监听器列表
     private static final List<Consumer<EasyBotConfig>> listeners = new ArrayList<>();
@@ -38,8 +40,6 @@ public class ConfigLoader {
      */
     public static EasyBotConfig get() {
         if (currentConfig == null) {
-            // 这种情况还是比较罕见的,currentConfig == null的情况只有初始化失败
-            // 初始化失败一般情况下会直接崩溃、而不会走到这里
             throw new IllegalStateException("未初始化配置！");
         }
         return currentConfig;
@@ -64,7 +64,6 @@ public class ConfigLoader {
             parentDir.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
 
             while (true) {
-                // 直到文件夹内有文件发生变化才会唤醒
                 WatchKey key;
                 try {
                     key = watcher.take();
@@ -76,22 +75,17 @@ public class ConfigLoader {
                 for (WatchEvent<?> event : key.pollEvents()) {
                     WatchEvent.Kind<?> kind = event.kind();
 
-                    // 忽略溢出事件
                     if (kind == StandardWatchEventKinds.OVERFLOW) {
                         continue;
                     }
 
-                    // 获取变化的文件名
                     @SuppressWarnings("unchecked") WatchEvent<Path> ev = (WatchEvent<Path>) event;
                     Path filename = ev.context();
 
-                    // 5. 确认变化的是我们的配置文件
                     if (filename.toString().equals(CONFIG_FILE_NAME)) {
                         LOGGER.info("检测到配置文件变化，正在尝试读取...");
 
-                        // 尝试重新加载配置
-                        // 注意：文件保存瞬间可能由于系统锁导致读取失败，reload() 内部已处理异常
-                        // 有时编辑器保存会触发多次事件... 我管你这那的 reload 只是多读几次
+                        // 直接尝试重新加载配置，不等待文件写入完成
                         reload();
 
                         if (isValidToken(currentConfig)) {
@@ -103,7 +97,6 @@ public class ConfigLoader {
                     }
                 }
 
-                // 重置 key，如果返回 false 说明目录已不可访问（如被删除），跳出循环
                 boolean valid = key.reset();
                 if (!valid) {
                     throw new RuntimeException("配置文件目录不再有效，无法继续监听。");
@@ -119,7 +112,7 @@ public class ConfigLoader {
      * 辅助方法：判断配置中的 Token 是否有效
      */
     private static boolean isValidToken(EasyBotConfig config) {
-        return config != null && config.getToken() != null && !config.getToken().trim().isEmpty() && !config.getToken().equals("在此处填写Token"); // 防止用户没改默认值
+        return config != null && config.getToken() != null && !config.getToken().trim().isEmpty() && !config.getToken().equals("在此处填写Token");
     }
 
     /**
@@ -135,6 +128,8 @@ public class ConfigLoader {
         }
 
         String content = Files.readString(CONFIG_PATH);
+        // 计算配置内容哈希值，用于后续检测文件是否真正变化
+        lastConfigHash = content.hashCode();
         currentConfig = GSON.fromJson(content, EasyBotConfig.class);
         LOGGER.info("配置加载成功。");
     }
@@ -151,12 +146,24 @@ public class ConfigLoader {
 
         try {
             String content = Files.readString(CONFIG_PATH);
+            
+            // 检测配置内容是否真正变化，避免不必要的重载
+            long currentHash = content.hashCode();
+            if (currentHash == lastConfigHash) {
+                LOGGER.debug("配置内容未变化，跳过重载");
+                return;
+            }
+            
             EasyBotConfig newConfig = GSON.fromJson(content, EasyBotConfig.class);
             if (newConfig == null) {
                 throw new JsonSyntaxException("解析结果为 null");
             }
+            
             currentConfig = newConfig;
+            lastConfigHash = currentHash;
             LOGGER.info("配置热重载成功！");
+            
+            // 同步通知监听器
             notifyListeners();
         } catch (JsonSyntaxException e) {
             LOGGER.error("============================================================");
@@ -182,7 +189,6 @@ public class ConfigLoader {
             LOGGER.info("启动配置自动热重载监听器...");
             try (WatchService watcher = FileSystems.getDefault().newWatchService()) {
                 Path parentDir = CONFIG_PATH.getParent();
-                // 确保目录存在
                 if (!Files.exists(parentDir)) {
                     Files.createDirectories(parentDir);
                 }
@@ -192,7 +198,7 @@ public class ConfigLoader {
                 while (!Thread.currentThread().isInterrupted()) {
                     WatchKey key;
                     try {
-                        key = watcher.take(); // 阻塞等待事件
+                        key = watcher.take();
                     } catch (InterruptedException x) {
                         Thread.currentThread().interrupt();
                         break;
@@ -226,8 +232,6 @@ public class ConfigLoader {
                         if (!pollEvents.isEmpty()) {
                             LOGGER.debug("合并了额外 {} 个文件变更事件", pollEvents.size());
                         }
-
-                        // 执行重载
                         reload();
                     }
 
@@ -244,7 +248,6 @@ public class ConfigLoader {
             }
         }, "EasyBot-Config-Watcher");
 
-        // 设置为守护线程，这样当游戏/服务器关闭时，这个线程会自动结束，不会阻止 JVM 退出
         watcherThread.setDaemon(true);
         watcherThread.start();
     }
@@ -258,7 +261,10 @@ public class ConfigLoader {
         }
         try {
             Files.createDirectories(CONFIG_PATH.getParent());
-            Files.writeString(CONFIG_PATH, GSON.toJson(currentConfig));
+            String content = GSON.toJson(currentConfig);
+            Files.writeString(CONFIG_PATH, content);
+            // 更新哈希值
+            lastConfigHash = content.hashCode();
             LOGGER.info("配置已保存。");
         } catch (IOException e) {
             LOGGER.error("保存配置失败!", e);
@@ -274,6 +280,9 @@ public class ConfigLoader {
         listeners.add(listener);
     }
 
+    /**
+     * 同步通知监听器
+     */
     private static void notifyListeners() {
         for (Consumer<EasyBotConfig> listener : listeners) {
             try {
