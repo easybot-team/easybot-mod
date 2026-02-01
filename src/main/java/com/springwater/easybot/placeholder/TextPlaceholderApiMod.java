@@ -1,5 +1,5 @@
 //? fabric {
-package com.springwater.easybot.placeholder;
+/*package com.springwater.easybot.placeholder;
 import com.springwater.easybot.ModFlags;
 import com.springwater.easybot.platforms.EasyBotModImpl;
 import com.springwater.easybot.platforms.ModData;
@@ -66,4 +66,4 @@ public class TextPlaceholderApiMod {
         }
     }
 }
-//?}
+*///?}

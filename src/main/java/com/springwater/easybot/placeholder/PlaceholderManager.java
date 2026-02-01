@@ -37,8 +37,8 @@ public class PlaceholderManager implements IPlaceholderManager {
         }
         String intermediate = text;
         //? fabric {
-        intermediate = TextPlaceholderApiMod.replacePlaceholders(text, playerName, player);
-        //?}
+        /*intermediate = TextPlaceholderApiMod.replacePlaceholders(text, playerName, player);
+        *///?}
         Matcher matcher = PLACEHOLDER_PATTERN.matcher(intermediate);
         if (!matcher.find()) {
             return intermediate;

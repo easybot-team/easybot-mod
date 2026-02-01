@@ -1,5 +1,5 @@
 //? fabric {
-package com.springwater.easybot.platforms.fabric;
+/*package com.springwater.easybot.platforms.fabric;
 
 import com.springwater.easybot.bridge.BridgeClient;
 import com.springwater.easybot.platforms.EasyBotModImpl;
@@ -44,4 +44,4 @@ public class FabricModImpl implements EasyBotModImpl {
         return FabricEntry.getBridgeClient();
     }
 }
-//?}
+*///?}

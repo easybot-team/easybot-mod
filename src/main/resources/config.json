@@ -27,5 +27,8 @@
     "bindSuccess": [
       "say 玩家$player绑定成功,Id=$account,账号名字=$name"
     ]
+  },
+  "fabric": {
+    "useMixinReport1201": false
   }
 }

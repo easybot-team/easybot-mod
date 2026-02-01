@@ -1,5 +1,5 @@
 //? fabric {
-package com.springwater.easybot.platforms.fabric.features;
+/*package com.springwater.easybot.platforms.fabric.features;
 
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.features.IEasyBotFeatures;
@@ -29,4 +29,4 @@ public class MessageSyncFeature {
         EasyBotNetworkingThreadPool.getInstance().addTask(() -> EasyBotModImpl.INSTANCE.getBridgeClient().syncMessage(playerInfo, message.signedContent(), false), "消息同步");
     }
 }
-//?}
+*///?}

@@ -18,14 +18,22 @@ public class EasyBotConfig {
     private boolean ignoreError = false;
     private boolean updateNotify = true;
     private boolean enableWhiteList = false;
-
-
+    
     private Message message = new Message();
     private Command command = new Command();
     private SkipOptions skipOptions = new SkipOptions();
     private Geyser geyser = new Geyser();
     private Event event = new Event();
 
+    private Fabric fabric = new Fabric();
+    
+    @Getter
+    @Setter
+    @ToString
+    public static class Fabric{
+        private boolean useMixinReport1201 = false;
+    }
+    
     @Getter
     @Setter
     @ToString

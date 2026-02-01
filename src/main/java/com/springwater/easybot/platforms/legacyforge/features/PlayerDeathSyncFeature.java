@@ -1,5 +1,5 @@
 //? legacyforge {
-/*package com.springwater.easybot.platforms.legacyforge.features;
+package com.springwater.easybot.platforms.legacyforge.features;
 
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.features.IEasyBotFeatures;
@@ -46,8 +46,8 @@ public class PlayerDeathSyncFeature implements IEasyBotFeatures {
                 //? if >=1.19.4 {
                 path = source.type().msgId();
                 //?} else {
-                /^path = source.getMsgId();
-                 ^///?}
+                /*path = source.getMsgId();
+                 *///?}
 
                 //noinspection ConstantValue
                 if (path != null) {
@@ -70,4 +70,4 @@ public class PlayerDeathSyncFeature implements IEasyBotFeatures {
         return entity.getName().getString();
     }
 }
-*///?}
+//?}
