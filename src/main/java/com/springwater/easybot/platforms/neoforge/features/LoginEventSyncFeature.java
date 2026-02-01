@@ -6,6 +6,7 @@ import com.springwater.easybot.features.IEasyBotFeatures;
 import com.springwater.easybot.platforms.EasyBotModImpl;
 import com.springwater.easybot.platforms.ModData;
 import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
+import com.springwater.easybot.utils.CarpetUtils;
 import com.springwater.easybot.utils.PlayerUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -22,6 +23,12 @@ public class LoginEventSyncFeature implements IEasyBotFeatures {
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         var player = (ServerPlayer) event.getEntity();
+        if (CarpetUtils.isFakePlayer(player)) {
+            if (ConfigLoader.get().isDebug()) {
+                ModData.LOGGER.info("已过滤地毯假人 {}", player.getName().getString());
+            }
+            return;
+        }
         if (ConfigLoader.get().getSkipOptions().isSkipJoin()) return;
         if (!EasyBotModImpl.INSTANCE.getBridgeClient().isReady()) {
             ModData.LOGGER.warn("玩家取消玩家上线同步,因为服务器未连接主程序");
@@ -34,7 +41,13 @@ public class LoginEventSyncFeature implements IEasyBotFeatures {
 
     @SubscribeEvent
     public void onPlayerQuit(PlayerEvent.PlayerLoggedOutEvent event) {
-        var player =(ServerPlayer) event.getEntity();
+        var player = (ServerPlayer) event.getEntity();
+        if (CarpetUtils.isFakePlayer(player)) {
+            if (ConfigLoader.get().isDebug()) {
+                ModData.LOGGER.info("已过滤地毯假人 {}", player.getName().getString());
+            }
+            return;
+        }
         if (ConfigLoader.get().getSkipOptions().isSkipQuit()) return;
         if (!EasyBotModImpl.INSTANCE.getBridgeClient().isReady()) {
             ModData.LOGGER.warn("玩家取消玩家下线同步,因为服务器未连接主程序");

@@ -6,6 +6,7 @@ import com.springwater.easybot.features.IEasyBotFeatures;
 import com.springwater.easybot.platforms.legacyforge.LegacyForgeEntry;
 import com.springwater.easybot.platforms.ModData;
 import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
+import com.springwater.easybot.utils.CarpetUtils;
 import com.springwater.easybot.utils.PlayerUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,6 +23,12 @@ public class LoginEventSyncFeature implements IEasyBotFeatures {
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (ConfigLoader.get().getSkipOptions().isSkipJoin()) return;
+        if (CarpetUtils.isFakePlayer(player)) {
+            if (ConfigLoader.get().isDebug()) {
+                ModData.LOGGER.info("已过滤地毯假人 {}", player.getName().getString());
+            }
+            return;
+        }
         if (LegacyForgeEntry.getBridgeClient() == null || !LegacyForgeEntry.getBridgeClient().isReady()) {
             ModData.LOGGER.warn("玩家取消玩家上线同步,因为服务器未连接主程序");
             return;
@@ -35,9 +42,13 @@ public class LoginEventSyncFeature implements IEasyBotFeatures {
     @SubscribeEvent
     public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
-
         if (ConfigLoader.get().getSkipOptions().isSkipQuit()) return;
-
+        if (CarpetUtils.isFakePlayer(player)) {
+            if (ConfigLoader.get().isDebug()) {
+                ModData.LOGGER.info("已过滤地毯假人 {}", player.getName().getString());
+            }
+            return;
+        }
         if (LegacyForgeEntry.getBridgeClient() == null || !LegacyForgeEntry.getBridgeClient().isReady()) {
             ModData.LOGGER.warn("玩家取消玩家下线同步,因为服务器未连接主程序");
             return;

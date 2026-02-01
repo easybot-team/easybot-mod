@@ -3,8 +3,10 @@ package com.springwater.easybot.platforms.legacyforge.features;
 
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.features.IEasyBotFeatures;
+import com.springwater.easybot.platforms.ModData;
 import com.springwater.easybot.platforms.legacyforge.LegacyForgeEntry;
 import com.springwater.easybot.threading.EasyBotNetworkingThreadPool;
+import com.springwater.easybot.utils.CarpetUtils;
 import com.springwater.easybot.utils.PlayerUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,6 +32,12 @@ public class PlayerDeathSyncFeature implements IEasyBotFeatures {
 
         var entity = event.getEntity();
         if (entity instanceof ServerPlayer player) {
+            if (CarpetUtils.isFakePlayer((ServerPlayer)entity)) {
+                if (ConfigLoader.get().isDebug()) {
+                    ModData.LOGGER.info("已过滤地毯假人 {}", entity.getName().getString());
+                }
+                return;
+            }
             var source = event.getSource();
 
             var profile = PlayerUtils.getPlayerInfo(player);
