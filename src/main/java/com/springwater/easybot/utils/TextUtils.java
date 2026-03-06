@@ -32,7 +32,7 @@ public class TextUtils {
     }
 
     private static void appendRGB(StringBuilder sb, int rgb) {
-        String hex = String.format("%06X", rgb & 0xFFFFFF);
+        String hex = String.format("%06X", rgb & 0xFFFFFF).toLowerCase();
         sb.append("§x");
         for (char c : hex.toCharArray()) {
             sb.append('§').append(c);
