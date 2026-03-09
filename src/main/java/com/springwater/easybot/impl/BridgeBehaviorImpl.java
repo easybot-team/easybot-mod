@@ -103,10 +103,10 @@ public class BridgeBehaviorImpl implements BridgeBehavior {
             var bindPlayer = EasyBotModImpl.INSTANCE.getServer().getPlayerList().getPlayerByName(playerName);
             if (bindPlayer != null) {
                 //? >= 1.21.11 {
-                bindPlayer.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
-                //?} else {
-                /*bindPlayer.playNotifySound(SoundEvents.PLAYER_LEVELUP,SoundSource.MASTER,1.0f,1.0f);
-                 *///?}
+                /*bindPlayer.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
+                *///?} else {
+                bindPlayer.playNotifySound(SoundEvents.PLAYER_LEVELUP,SoundSource.MASTER,1.0f,1.0f);
+                 //?}
 
                 // 通知绑定成功的喜报!!
                 bindPlayer.sendSystemMessage(

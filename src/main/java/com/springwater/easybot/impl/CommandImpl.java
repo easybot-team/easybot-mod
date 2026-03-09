@@ -18,10 +18,10 @@ public class CommandImpl {
         var source = new CommandSourceImpl();
         var level = EasyBotModImpl.INSTANCE.getServer().overworld();
         //? >= 1.21.11 {
-        CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, net.minecraft.server.permissions.PermissionSet.ALL_PERMISSIONS, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
-        //?} else {
-        /*CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, 4, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
-         *///?}
+        /*CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, net.minecraft.server.permissions.PermissionSet.ALL_PERMISSIONS, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
+        *///?} else {
+        CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, 4, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
+         //?}
         EasyBotModImpl.INSTANCE.getServer().getCommands().performPrefixedCommand(stack, command);
         var messages = source.getMessages();
         // 原有的同步实现使用换行符
@@ -49,10 +49,10 @@ public class CommandImpl {
 
         var level = EasyBotModImpl.INSTANCE.getServer().overworld();
         //? >= 1.21.11 {
-        CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, net.minecraft.server.permissions.PermissionSet.ALL_PERMISSIONS, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
-        //?} else {
-        /*CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, 4, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
-         *///?}
+        /*CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, net.minecraft.server.permissions.PermissionSet.ALL_PERMISSIONS, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
+        *///?} else {
+        CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, 4, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
+         //?}
         // 必须在主线程执行
         EasyBotModImpl.INSTANCE.getServer().execute(() -> {
             try {

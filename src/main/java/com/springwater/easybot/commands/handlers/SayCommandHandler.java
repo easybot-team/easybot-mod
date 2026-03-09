@@ -54,10 +54,10 @@ public class SayCommandHandler implements ICommandHandler {
                                                             ServerPlayer player = context.getSource().getPlayer();
                                                             if (player != null) {
                                                                 //? >= 1.21.11 {
-                                                                player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
-                                                                //?} else {
-                                                                /*player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 1.0F, 1.0F);
-                                                                 *///?}
+                                                                /*player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
+                                                                *///?} else {
+                                                                player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 1.0F, 1.0F);
+                                                                 //?}
                                                             }
                                                         }
                                                     });

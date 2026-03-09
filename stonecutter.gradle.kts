@@ -6,7 +6,7 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0" apply false
 }
 
-stonecutter active "1.21.11-fabric"
+stonecutter active "1.21.6-fabric"
 
 
 // See https://stonecutter.kikugie.dev/wiki/config/params

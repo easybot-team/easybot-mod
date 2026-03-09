@@ -10,17 +10,17 @@ import com.mojang.authlib.GameProfile;
 public class GameProfileUtils {
     public static String getName(GameProfile profile) {
         //? if >=1.21.9 {
-        return profile.name();
-        //?} else {
-        /*return profile.getName();
-         *///?}
+        /*return profile.name();
+        *///?} else {
+        return profile.getName();
+         //?}
     }
 
     public static String getUuid(GameProfile profile) {
         //? if >=1.21.9 {
-        return profile.id().toString();
-        //?} else {
-        /*return profile.getId().toString();
-         *///?}
+        /*return profile.id().toString();
+        *///?} else {
+        return profile.getId().toString();
+         //?}
     }
 }
