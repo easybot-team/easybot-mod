@@ -24,17 +24,17 @@ public class SkinUtils {
             GameProfile profile = player.getGameProfile();
             // 获取 "textures" 属性
             //? if >1.21.8 {
-            /*Collection<Property> textures = profile.properties().get("textures");
-             *///?} else {
-            Collection<Property> textures = profile.getProperties().get("textures");
-            //?}
+            Collection<Property> textures = profile.properties().get("textures");
+             //?} else {
+            /*Collection<Property> textures = profile.getProperties().get("textures");
+            *///?}
             if (!textures.isEmpty()) {
                 Property property = textures.iterator().next(); // 获取第一个属性
                 //? if >=1.20.2 {
-                /*String value = property.value();
-                 *///?} else {
-                String value = property.getValue();
-                //?}
+                String value = property.value();
+                 //?} else {
+                /*String value = property.getValue();
+                *///?}
                 String decodedValue = new String(Base64.getDecoder().decode(value), StandardCharsets.UTF_8);
                 // JSON 结构: {"timestamp":..., "profileId":..., "profileName":..., "textures":{"SKIN":{"url":"http://textures.minecraft.net/texture/..."}}}
                 JsonObject jsonObject = gson.fromJson(decodedValue, JsonObject.class);

@@ -1,5 +1,5 @@
 //? fabric {
-/*package com.springwater.easybot.platforms.fabric;
+package com.springwater.easybot.platforms.fabric;
 
 import com.springwater.easybot.ModFlags;
 import com.springwater.easybot.bridge.BridgeClient;
@@ -35,14 +35,14 @@ import java.nio.file.Files;
 import java.util.List;
 
 //
-// 给开发人员的文档,你可能注意到了代码中的 /^$ mod_id^/ 类似的注释
+// 给开发人员的文档,你可能注意到了代码中的 /*$ mod_id*/ 类似的注释
 // 这其实是模板代码, 运行时替换为实际值, 我们基于stonecutter进行开发, 关于这部分内容请参考文档
 // https://stonecutter.kikugie.dev/wiki/faq
 //
 
-/^*
+/**
  * EasyBotFabric插件实例
- ^/
+ */
 public class FabricEntry implements ModInitializer {
     public static final Logger LOGGER = ModData.LOGGER;
     @Getter
@@ -177,4 +177,4 @@ public class FabricEntry implements ModInitializer {
         bridgeClient.stop(); // 这里使用会自动重连的stop而不是销毁时候用的close！！！
     }
 }
-*///?}
+//?}

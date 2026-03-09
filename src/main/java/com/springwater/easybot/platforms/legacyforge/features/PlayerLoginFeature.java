@@ -1,5 +1,5 @@
 //? legacyforge {
-package com.springwater.easybot.platforms.legacyforge.features;
+/*package com.springwater.easybot.platforms.legacyforge.features;
 import com.springwater.easybot.bridge.model.PlayerInfo;
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.features.IEasyBotFeatures;
@@ -59,4 +59,4 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
         handler.disconnect(Component.literal("§c服务器内部异常,请稍后重试!"));
     }
 }
-//?}
+*///?}

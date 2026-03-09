@@ -1,5 +1,5 @@
 //? fabric {
-/*package com.springwater.easybot.platforms.fabric.features;
+package com.springwater.easybot.platforms.fabric.features;
 
 import com.springwater.easybot.bridge.model.PlayerInfo;
 import com.springwater.easybot.config.ConfigLoader;
@@ -56,8 +56,8 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
         
         ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> {
             //? 1.20.1 {
-            if(ConfigLoader.get().getFabric().isUseMixinReport1201()) return;
-            //?}
+            /*if(ConfigLoader.get().getFabric().isUseMixinReport1201()) return;
+            *///?}
             // 这会让客户端停留在 "通讯数据中..."
             synchronizer.waitFor(CompletableFuture.runAsync(() -> CommonPlayerLoginFeature.getHandler().onLoginStart(handler)));
         });
@@ -73,4 +73,4 @@ public class PlayerLoginFeature implements IEasyBotFeatures {
         handler.disconnect(Component.literal("§c服务器内部异常,请稍后重试!"));
     }
 }
-*///?}
+//?}

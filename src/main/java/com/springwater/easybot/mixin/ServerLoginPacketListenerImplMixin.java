@@ -1,7 +1,7 @@
 package com.springwater.easybot.mixin;
 //? 1.20.1 {
 
-import com.mojang.authlib.GameProfile;
+/*import com.mojang.authlib.GameProfile;
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.platforms.ModData;
 import com.springwater.easybot.platforms.common.CommonPlayerLoginFeature;
@@ -39,10 +39,10 @@ public abstract class ServerLoginPacketListenerImplMixin {
     private void easybot$injectedTick(CallbackInfo ci) {
         if (easybot$tickCount == 0 && easybot$future == null) {
             //? legacyforge {
-            if (true) {
-                //?} else {
-                /*if (ConfigLoader.get().getFabric().isUseMixinReport1201()) {
-                 *///?}
+            /^if (true) {
+                ^///?} else {
+                if (ConfigLoader.get().getFabric().isUseMixinReport1201()) {
+                 //?}
                 if (CommonPlayerLoginFeature.getHandler() == null) {
                     if (!ConfigLoader.get().isIgnoreError()) disconnect(Component.literal("§c[EasyBot] 服务器内部初始化错误,请检查日志!"));
                     ModData.LOGGER.error("fabric.isUseMixinReport但未初始化通用接口,该版本可能并不支持此模式,请尝试恢复false!");
@@ -79,9 +79,9 @@ public abstract class ServerLoginPacketListenerImplMixin {
     }
 
 }
-//?} else {
-/*import net.minecraft.server.network.ServerLoginPacketListenerImpl;
+*///?} else {
+import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
 @Mixin(ServerLoginPacketListenerImpl.class)
 public abstract class ServerLoginPacketListenerImplMixin {}
-*///?}
+//?}

@@ -1,5 +1,8 @@
 package com.springwater.easybot.placeholder.handlers;
+//? >= 1.21.11 {
 
+import com.google.gson.Gson;
+//?}
 import com.springwater.easybot.ModFlags;
 import com.springwater.easybot.api.IPlaceholderHandler;
 import com.springwater.easybot.mixin.ServerStatsCounterAccessor;
@@ -15,13 +18,18 @@ public class StatisticHandler implements IPlaceholderHandler {
         return "ez-statistic";
     }
 
-    private static String realTimeStatToJson(ServerPlayer player){
+    //? >= 1.21.11 {
+    private static final Gson GSON = new Gson();
+
+    //?}
+    private static String realTimeStatToJson(ServerPlayer player) {
         //? >= 1.21.11 {
-        /*return ((ServerStatsCounterAccessor) (player.getStats())).easybot$toJson().getAsString();
-        *///?} else {
-        return ((ServerStatsCounterAccessor) (player.getStats())).easybot$toJson();
-        //?}
+        return GSON.toJson(((ServerStatsCounterAccessor) (player.getStats())).easybot$toJson());
+        //?} else {
+        /*return ((ServerStatsCounterAccessor) (player.getStats())).easybot$toJson();
+         *///?}
     }
+
     public @Nullable String handle(String argumentWithoutPrefix, String playerName, @Nullable ServerPlayer player) {
         if (!ModFlags.isPlayerStatisticSupported())
             return null;

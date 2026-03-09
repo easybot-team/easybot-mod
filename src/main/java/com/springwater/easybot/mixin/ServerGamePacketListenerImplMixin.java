@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
 //? legacyforge {
-import net.minecraft.network.chat.PlayerChatMessage;
+/*import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraftforge.event.ServerChatEvent;
 @Mixin(ServerGamePacketListenerImpl.class)
@@ -21,8 +21,8 @@ public class ServerGamePacketListenerImplMixin {
         }
     }
 }
-//?} else if fabric {
-/*import net.minecraft.server.network.ServerGamePacketListenerImpl;
+*///?} else if fabric {
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.network.chat.PlayerChatMessage;
 
 @Mixin(ServerGamePacketListenerImpl.class)
@@ -35,7 +35,7 @@ public class ServerGamePacketListenerImplMixin {
         }
     }
 }
-*///?} else {
+//?} else {
 /*import net.minecraft.server.MinecraftServer;
 @Mixin(MinecraftServer.class)
 public class ServerGamePacketListenerImplMixin {
