@@ -29,15 +29,46 @@ public class PlaceholderManager implements IPlaceholderManager {
             throw new IllegalArgumentException("内部已存在使用此前缀的处理器: '" + handler.getPrefix());
         }
     }
+    private static String replaceInternal(String text, String playerName) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+
+        Matcher matcher = PLACEHOLDER_PATTERN.matcher(text);
+
+        // 如果没有任何占位符，直接返回，避免 StringBuilder 开销
+        if (!matcher.find()) {
+            return text;
+        }
+
+        StringBuilder sb = new StringBuilder(text.length() + 32);
+        matcher.reset(); // 重置 matcher 状态
+
+        while (matcher.find()) {
+            String content = matcher.group(1);
+            String fullKey = "%" + content + "%";
+            String replacement = PlaceholderApiMappings.PLACEHOLDER_API_MAPPINGS.get(fullKey);
+            if ("%player:name%".equals(replacement) || "%player_name%".equals(replacement)) {
+                replacement = playerName;
+            }
+
+            if (replacement != null) {
+                matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement));
+            }
+        }
+
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
 
     @Override
     public String replacePlaceholders(String text, String playerName, @Nullable ServerPlayer player) {
         if (text == null || text.isEmpty()) {
             return text;
         }
-        String intermediate = text;
+        String intermediate = replaceInternal(text, playerName);
         //? fabric {
-        intermediate = TextPlaceholderApiMod.replacePlaceholders(text, playerName, player);
+        intermediate = TextPlaceholderApiMod.replacePlaceholders(text, player);
         //?}
         Matcher matcher = PLACEHOLDER_PATTERN.matcher(intermediate);
         if (!matcher.find()) {

@@ -14,55 +14,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TextPlaceholderApiMod {
-    private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("%([^%]+)%");
-
-    private static String replaceInternal(String text, String playerName) {
-        if (text == null || text.isEmpty()) {
-            return text;
-        }
-
-        Matcher matcher = PLACEHOLDER_PATTERN.matcher(text);
-
-        // 如果没有任何占位符，直接返回，避免 StringBuilder 开销
-        if (!matcher.find()) {
-            return text;
-        }
-
-        StringBuilder sb = new StringBuilder(text.length() + 32);
-        matcher.reset(); // 重置 matcher 状态
-
-        while (matcher.find()) {
-            String content = matcher.group(1);
-            String fullKey = "%" + content + "%";
-            String replacement = PlaceholderApiMappings.PLACEHOLDER_API_MAPPINGS.get(fullKey);
-            if ("%player:name%".equals(replacement) || "%player_name%".equals(replacement)) {
-                replacement = playerName;
-            }
-
-            if (replacement != null) {
-                matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement));
-            }
-        }
-
-        matcher.appendTail(sb);
-        return sb.toString();
-    }
-
-    public static String replacePlaceholders(String text, String playerName, @Nullable ServerPlayer player) {
-        String intermediate = replaceInternal(text, playerName);
+    public static String replacePlaceholders(String text, @Nullable ServerPlayer player) {
         if (!ModFlags.isTextPlaceholderApiInstalled()) {
-            return intermediate;
+            return text;
         }
         try {
             var context = (player == null)
                     ? PlaceholderContext.of(EasyBotModImpl.INSTANCE.getServer())
                     : PlaceholderContext.of(player);
-            var placeholders = Component.literal(intermediate);
+            var placeholders = Component.literal(text);
             var result = Placeholders.parseText(placeholders, context);
             return TextUtils.toLegacyString(result);
         } catch (Exception e) {
-            ModData.LOGGER.error("TextPlaceholderApi 调用失败: {}", e.getMessage());
-            return intermediate;
+            ModData.LOGGER.error("TextPlaceholderApi 调用失败：{}", e.getMessage());
+            return text;
         }
     }
 }
