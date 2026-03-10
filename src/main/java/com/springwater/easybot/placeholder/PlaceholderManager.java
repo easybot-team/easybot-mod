@@ -68,7 +68,7 @@ public class PlaceholderManager implements IPlaceholderManager {
         }
         String intermediate = replaceInternal(text, playerName);
         //? fabric {
-        intermediate = TextPlaceholderApiMod.replacePlaceholders(text, player);
+        intermediate = TextPlaceholderApiMod.replacePlaceholders(intermediate, player);
         //?}
         Matcher matcher = PLACEHOLDER_PATTERN.matcher(intermediate);
         if (!matcher.find()) {
@@ -101,7 +101,10 @@ public class PlaceholderManager implements IPlaceholderManager {
                     }
                 } catch (Exception e) {
                     ModData.LOGGER.error("PlaceholderApi处理器处理主键 '{}' 时错误: {}", mainKey, e);
-                    ModData.LOGGER.error(e.getCause().toString());
+                    Throwable cause = e.getCause();
+                    if (cause != null) {
+                        ModData.LOGGER.error("PlaceholderApi处理器处理主键 '{}' 时错误: {}", mainKey, cause);
+                    }
                 }
             }
 
