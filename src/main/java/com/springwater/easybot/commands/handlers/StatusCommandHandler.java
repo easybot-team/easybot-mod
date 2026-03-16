@@ -68,16 +68,16 @@ public class StatusCommandHandler implements ICommandHandler {
                 if (player != null) {
                     if (EasyBotModImpl.INSTANCE.getBridgeClient().isReady()) {
                         //? >= 1.21.11 {
-                        /*player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
-                        *///?} else {
-                        player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 1.0F, 1.0F);
-                        //?}
+                        player.playSound(SoundEvents.PLAYER_LEVELUP, 1.0F, 1.0F);
+                        //?} else {
+                        /*player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 1.0F, 1.0F);
+                        *///?}
                     } else {
                         //? >= 1.21.11 {
-                        /*player.playSound(SoundEvents.VILLAGER_NO, 1.0F, 1.0F);
-                        *///?} else {
-                        player.playNotifySound(SoundEvents.VILLAGER_NO, SoundSource.MASTER, 1.0F, 1.0F);
-                         //?}
+                        player.playSound(SoundEvents.VILLAGER_NO, 1.0F, 1.0F);
+                        //?} else {
+                        /*player.playNotifySound(SoundEvents.VILLAGER_NO, SoundSource.MASTER, 1.0F, 1.0F);
+                         *///?}
                     }
                 }
             }

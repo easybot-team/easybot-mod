@@ -43,5 +43,10 @@ public class LegacyForgeModImpl implements EasyBotModImpl {
     public BridgeClient getBridgeClient() {
         return LegacyForgeEntry.getBridgeClient();
     }
+    
+    @Override
+    public boolean isAuthenticated(String playerName) {
+        return true; // 未实现
+    }
 }
 *///?}

@@ -4,9 +4,18 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
         maven("https://maven.fabricmc.net/") { name = "Fabric" }
-        maven("https://neoforged.forgecdn.net/releases") { name = "NeoForge" }
+        maven("https://neoforged.forgecdn.net/releases") {  name = "NeoForge" }
         maven("https://maven.minecraftforge.net") { name = "Forge" }
         maven("https://maven.kikugie.dev/snapshots") { name = "KikuGie Snapshots" }
+        all {
+            if (this is MavenArtifactRepository) {
+                if (url.toString().contains("maven.neoforged.net")) {
+                    content {
+                        excludeGroup("org.apache.logging.log4j")
+                    }
+                }
+            }
+        }
     }
 }
 

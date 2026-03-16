@@ -43,5 +43,10 @@ public class NeoForgeModImpl implements EasyBotModImpl {
     public BridgeClient getBridgeClient() {
         return NeoForgeEntry.getBridgeClient();
     }
+
+    @Override
+    public boolean isAuthenticated(String playerName) {
+        return true; // 未实现
+    }
 }
 *///?}

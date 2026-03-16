@@ -38,6 +38,7 @@ dependencies {
     modImplementation("eu.pb4:placeholder-api:${property("deps.placeholder_api_version")}")
 
     compileOnly("maven.modrinth:floodgate:${property("deps.floodgate_version")}")
+    compileOnly("maven.modrinth:easyauth:${property("deps.easyauth_version")}")
 
     val requiredFApiList = listOf(
         "fabric-entity-events-v1",      // 玩家死亡等数据的处理
