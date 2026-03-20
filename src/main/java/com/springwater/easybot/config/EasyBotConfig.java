@@ -27,6 +27,8 @@ public class EasyBotConfig {
 
     private Fabric fabric = new Fabric();
     
+    private Sync sync = new Sync();
+    
     @Getter
     @Setter
     @ToString
@@ -75,5 +77,12 @@ public class EasyBotConfig {
     public static class Event{
         private boolean enableSuccessEvent = false;
         private List<String> bindSuccess = new ArrayList<>(List.of("say 玩家$player绑定成功,Id=$account,账号名字=$name")); // 这是个默认值
+    }
+    
+    @Getter
+    @Setter
+    @ToString
+    public static class Sync {
+        private boolean chatImageSupport = true;
     }
 }

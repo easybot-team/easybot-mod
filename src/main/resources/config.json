@@ -30,5 +30,8 @@
   },
   "fabric": {
     "useMixinReport1201": false
+  },
+  "sync": {
+    "chatImageSupport": true
   }
 }
