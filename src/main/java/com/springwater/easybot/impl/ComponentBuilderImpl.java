@@ -1,5 +1,7 @@
 package com.springwater.easybot.impl;
+
 import com.springwater.easybot.bridge.message.*;
+import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.platforms.ModData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.*;
@@ -41,13 +43,16 @@ public class ComponentBuilderImpl {
     }
 
     private static void handleImageSegment(MutableComponent component, ImageSegment segment) {
-        // TODO: 使用某种神秘方法配合可以将图片显示到聊天栏的插件
         Style style = Style.EMPTY;
-        style = ComponentAdapterImpl.withHoverText(style, Component.literal("点我跳转").withStyle(ChatFormatting.GRAY));
+        if (ConfigLoader.get().getSync().isChatImageSupport()) {
+            style = ComponentAdapterImpl.withHoverText(style, Component.literal("[[CICode,url=" + segment.getUrl() + ",name=" + segment.getSummary() + "]]"));
+        } else {
+            style = ComponentAdapterImpl.withHoverText(style, Component.literal("点我跳转").withStyle(ChatFormatting.GRAY));
+        }
         style = ComponentAdapterImpl.withOpenUrl(style, segment.getUrl());
         style = style.withColor(ChatFormatting.GREEN);
         component.append(
-                Component.literal("[图片]")
+                Component.literal(segment.getSummary())
                         .withStyle(style)
         );
 
@@ -65,18 +70,18 @@ public class ComponentBuilderImpl {
                             Component.literal("ID: " + segment.getAtUserId() + "\n")
                     )
                     .append(
-                            Component.literal("名称: " + segment.getAtUserName()+ "\n")
+                            Component.literal("名称: " + segment.getAtUserName() + "\n")
                     )
                     .append(
                             Component.literal("全部绑定: " + String.join(",", segment.getAtPlayerNames()))
                     )
             );
-            
+
             String atUserName = segment.getAtUserName();
-            if(segment.getAtPlayerNames().length >= 1){
+            if (segment.getAtPlayerNames().length >= 1) {
                 atUserName = segment.getAtPlayerNames()[0];
             }
-            
+
             component.append(
                     Component.empty()
                             .withStyle(style)

@@ -24,10 +24,10 @@ public class SkinUtils {
             GameProfile profile = player.getGameProfile();
             // 获取 "textures" 属性
             //? if >1.21.8 {
-            /*Collection<Property> textures = profile.properties().get("textures");
-             *///?} else {
-            Collection<Property> textures = profile.getProperties().get("textures");
-            //?}
+            Collection<Property> textures = profile.properties().get("textures");
+             //?} else {
+            /*Collection<Property> textures = profile.getProperties().get("textures");
+            *///?}
             if (!textures.isEmpty()) {
                 Property property = textures.iterator().next(); // 获取第一个属性
                 //? if >=1.20.2 {

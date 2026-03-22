@@ -32,6 +32,7 @@ dependencies {
 
     compileOnly("org.spongepowered:mixin:0.8.5:processor")
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+    compileOnly("org.apache.logging.log4j:log4j-api:2.25.3")
 }
 
 

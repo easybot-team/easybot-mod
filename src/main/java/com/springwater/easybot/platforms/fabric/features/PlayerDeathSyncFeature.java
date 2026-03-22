@@ -34,15 +34,15 @@ public class PlayerDeathSyncFeature implements IEasyBotFeatures {
 
                 var key = source.typeHolder().unwrapKey();
                 //? >=1.21.11 {
-                /*if (key.isPresent() && !key.get().identifier().getPath().equals("mob_attack")) {
-                 *///?} else {
-                if (key.isPresent() && !key.get().location().getPath().equals("mob_attack")) {
-                    //?}
+                if (key.isPresent() && !key.get().identifier().getPath().equals("mob_attack")) {
+                 //?} else {
+                /*if (key.isPresent() && !key.get().location().getPath().equals("mob_attack")) {
+                    *///?}
                     //? >=1.21.11 {
-                    /*var path = key.get().identifier().getPath();
-                     *///?} else {
-                    var path = key.get().location().getPath();
-                    //?}
+                    var path = key.get().identifier().getPath();
+                     //?} else {
+                    /*var path = key.get().location().getPath();
+                    *///?}
                     if (player.getKillCredit() != null) {
                         killer.append(getKillerName(player.getKillCredit()));
                     } else {

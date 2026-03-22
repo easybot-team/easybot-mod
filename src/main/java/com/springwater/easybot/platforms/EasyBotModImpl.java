@@ -34,4 +34,5 @@ public interface EasyBotModImpl {
     Path getConfigDirectory();
     MinecraftServer getServer();
     BridgeClient getBridgeClient();
+    boolean isAuthenticated(String playerName);
 }
