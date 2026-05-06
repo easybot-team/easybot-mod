@@ -54,7 +54,7 @@ dependencies {
 
 loom {
     fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json") // 用于接口注入
-    accessWidenerPath = rootProject.file("src/main/resources/easybot.accesswidener")
+    //accessWidenerPath = rootProject.file("src/main/resources/easybot.accesswidener")
 
     decompilerOptions.named("vineflower") {
         options.put("mark-corresponding-synthetics", "1") // 为lambda表达式添加名称 - 对于mixins很有用

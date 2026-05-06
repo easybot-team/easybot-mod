@@ -20,27 +20,41 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.7.11"
+    id("dev.kikugie.stonecutter") version "0.9.1-beta.4"
 }
 
 stonecutter {
-    kotlinController = true
-    centralScript = "build.gradle.kts"
-    
     create(rootProject) {
-        fun match(version: String, vararg loaders: String) = loaders
-            .forEach { vers("$version-$it", version).buildscript = "build.$it.gradle.kts" }
+        mapBuilds { _, data ->
+            val loader = data.project.substringAfterLast('-')
+            if (loader == "fabric") {
+                if (stonecutter.eval(data.version, ">=26.1")) {
+                    "build.fabric-new.gradle.kts" // 新版本配置
+                } else {
+                    "build.fabric-old.gradle.kts"
+                }
+            } else {
+                "build.$loader.gradle.kts"
+            }
+        }
+        fun match(v: String, vararg loaders: String) {
+            loaders.forEach { version("$v-$it", v) }
+        }
 
         match("1.20.1", "fabric", "legacyforge")
         match("1.20.2", "fabric")
         match("1.20.4", "fabric", "neoforge")
         match("1.20.6", "fabric", "neoforge")
         match("1.21", "fabric", "neoforge")
-        match("1.21.8", "fabric", "neoforge")
         match("1.21.6", "fabric", "neoforge")
+        match("1.21.8", "fabric", "neoforge")
         match("1.21.9", "fabric", "neoforge")
         match("1.21.10", "fabric", "neoforge")
         match("1.21.11", "fabric", "neoforge")
+        match("26.1", "fabric", "neoforge")
+        match("26.1.1", "fabric", "neoforge")
+        match("26.1.2", "fabric", "neoforge")
+
         vcsVersion = "1.21.11-fabric"
     }
 }

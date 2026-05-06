@@ -22,7 +22,7 @@
   "mixins": [
     "easybot.mixins.json"
   ],
-  "accessWidener": "easybot.accesswidener",
+  "accessWidener": "${access_widener}",
   "depends": {
     "fabricloader": ">=0.1",
     "minecraft": "${minecraft_range}"
