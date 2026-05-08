@@ -9,6 +9,6 @@ repositories {
 }
 
 dependencies {
-    implementation("dev.kikugie:stonecutter:0.7.6")
+    implementation("dev.kikugie:stonecutter:0.9.1-beta.4")
     implementation("com.gradleup.shadow:shadow-gradle-plugin:9.3.0")
 }

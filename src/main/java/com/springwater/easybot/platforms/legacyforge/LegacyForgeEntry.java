@@ -134,6 +134,9 @@ public class LegacyForgeEntry {
         StatisticManager.getInstance().initDb(ConfigLoader.CONFIG_PATH.getParent().resolve("uuid_mapping").toString());
         var overworld = server.getWorldPath(LevelResource.ROOT);
         var statPath = overworld.resolve("stats");
+        //? >= 26.1 {
+        statPath = server.getWorldPath(LevelResource.PLAYER_STATS_DIR);
+        //?}
         if (!Files.exists(statPath)) {
             LOGGER.warn("未找到统计数据目录 {} 无法使用玩家统计变量!", statPath);
             ModFlags.setPlayerStatisticSupported(false);

@@ -50,8 +50,8 @@ repositories {
 }
 dependencies {
     
-    compileOnly("org.projectlombok:lombok:1.18.32")
-    annotationProcessor("org.projectlombok:lombok:1.18.32")
+    compileOnly("org.projectlombok:lombok:1.18.44")
+    annotationProcessor("org.projectlombok:lombok:1.18.44")
 
     //
     // 如何将依赖打包到Jar文件中, 用shade!!!!
@@ -97,7 +97,8 @@ tasks {
             "neoforge" to project.property("deps.neoforge"),
             "forge_loader_range" to project.property("forge.loader.range"),
             "loader" to $$"${loader}", // 在实际的构建中, ${loader} 会被替换成 neoforge/legacyforge/fabric
-            "targets" to project.property("mod.support_mc_versions")
+            "targets" to project.property("mod.support_mc_versions"),
+            "access_widener" to project.property("fabric.access_widener")
         )
 
         filesMatching(listOf("META-INF/mods.toml", "META-INF/neoforge.mods.toml", "fabric.mod.json", "mod.package.json")) {

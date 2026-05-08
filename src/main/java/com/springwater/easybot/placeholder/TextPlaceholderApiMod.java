@@ -1,5 +1,5 @@
-//? fabric {
-package com.springwater.easybot.placeholder;
+//? fabric && <= 1.21.11 {
+/*package com.springwater.easybot.placeholder;
 import com.springwater.easybot.ModFlags;
 import com.springwater.easybot.platforms.EasyBotModImpl;
 import com.springwater.easybot.platforms.ModData;
@@ -31,4 +31,4 @@ public class TextPlaceholderApiMod {
         }
     }
 }
-//?}
+*///?}

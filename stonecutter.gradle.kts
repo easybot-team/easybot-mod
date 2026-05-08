@@ -1,12 +1,12 @@
 plugins {
     id("dev.kikugie.stonecutter")
-    id("fabric-loom") version "1.14.5" apply false // 好臭的版本号
-    id("net.neoforged.moddev") version "2.0.123" apply false    
+    id("net.fabricmc.fabric-loom") version "1.15-SNAPSHOT" apply false
+    id("net.neoforged.moddev") version "2.0.141" apply false    
     id("net.minecraftforge.gradle") version "6.0.46" apply false
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0" apply false
 }
 
-stonecutter active "1.21.11-fabric"
+stonecutter active "26.1.1-fabric"
 
 
 // See https://stonecutter.kikugie.dev/wiki/config/params

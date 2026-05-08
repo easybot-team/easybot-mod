@@ -7,6 +7,7 @@ version = "neoforge-${property("mod.version")}+mc${property("mod.mc_dep_display"
 base.archivesName = property("mod.id") as String
 
 val requiredJava = when {
+    stonecutter.eval(stonecutter.current.version, ">=26.1") -> JavaVersion.VERSION_25
     stonecutter.eval(stonecutter.current.version, ">=1.20.6") -> JavaVersion.VERSION_21
     stonecutter.eval(stonecutter.current.version, ">=1.18") -> JavaVersion.VERSION_17
     // shadowJar旧版本relocate有bug、文档上说新版本理论上已不再兼容Java17以下的版本
