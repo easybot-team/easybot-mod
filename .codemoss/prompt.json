@@ -1,0 +1,11 @@
+{
+  "prompts": {
+    "4f3a7ce7-1957-4536-ad51-61d8abffdc11": {
+      "id": "4f3a7ce7-1957-4536-ad51-61d8abffdc11",
+      "name": "client-socket",
+      "content": "要求所有与桥接客户端的通信必须从服务端转发，严谨绕过服务端直接通过客户端通信",
+      "provider": "codex",
+      "createdAt": 1788014956426
+    }
+  }
+}

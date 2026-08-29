@@ -26,6 +26,7 @@ public class EasyBotConfig {
     private Event event = new Event();
 
     private Fabric fabric = new Fabric();
+    private Client client = new Client();
     
     private Sync sync = new Sync();
     
@@ -34,6 +35,15 @@ public class EasyBotConfig {
     @ToString
     public static class Fabric{
         private boolean useMixinReport1201 = false;
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    public static class Client {
+        private boolean enableClientIpSync = true;
+        private String publicIpServiceUrl = "https://api.ipify.org?format=json";
+        private int publicIpRequestTimeoutMs = 3000;
     }
     
     @Getter

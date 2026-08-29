@@ -72,6 +72,13 @@ java {
     sourceCompatibility = requiredJava
 }
 
+sourceSets {
+    named("main") {
+        java.srcDir("src/client/java")
+        resources.srcDir("src/client/resources")
+    }
+}
+
 tasks {
     remapJar {
         dependsOn("shadowJar")

@@ -1,4 +1,5 @@
 package com.springwater.easybot.utils;
+import com.springwater.easybot.clientip.ClientIpCache;
 import com.springwater.easybot.bridge.packet.PlayerInfoWithRaw;
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.platforms.EasyBotModImpl;
@@ -59,6 +60,14 @@ public class PlayerUtils {
     }
 
     public static String getPlayerIp(ServerPlayer player) {
+        String clientIp = ClientIpCache.get(player.getUUID());
+        if (clientIp != null && !clientIp.isBlank()) {
+            if (ConfigLoader.get().isDebug()) {
+                ModData.LOGGER.info("玩家{}使用客户端上报的公网IP {}", player.getName().getString(), clientIp);
+            }
+            return clientIp;
+        }
+
         var ip = getRemoteIp(getRemoteAddress(player));
         if (Objects.equals(ip, "127.0.0.1") && ConfigLoader.get().isDebug()) {
             ModData.LOGGER.info("玩家{}没有真实网络地址, 已使用回环IP", player.getName().getString());

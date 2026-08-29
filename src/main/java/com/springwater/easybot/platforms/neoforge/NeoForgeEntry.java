@@ -16,6 +16,7 @@ import com.springwater.easybot.placeholder.handlers.StatisticHandler;
 import com.springwater.easybot.platforms.ModData;
 import com.springwater.easybot.platforms.neoforge.features.LoginEventSyncFeature;
 import com.springwater.easybot.platforms.neoforge.features.MessageSyncFeature;
+import com.springwater.easybot.platforms.neoforge.features.ClientIpSyncFeature;
 import com.springwater.easybot.platforms.neoforge.features.PlayerDeathSyncFeature;
 import com.springwater.easybot.platforms.neoforge.features.PlayerLoginFeature;
 import com.springwater.easybot.statistic.StatisticManager;
@@ -82,6 +83,7 @@ public class NeoForgeEntry {
         EasyBotNetworkingThreadPool.getInstance(); // 这一步仅仅只是为了让线程池初始化资源,为后续上报任务做准备
     
         modEventBus.register(new PlayerLoginFeature());
+        modEventBus.addListener(ClientIpSyncFeature::registerPayloads);
     }
 
     @SubscribeEvent

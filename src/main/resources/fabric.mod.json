@@ -17,6 +17,9 @@
   "entrypoints": {
     "main": [
       "com.springwater.easybot.platforms.fabric.FabricEntry"
+    ],
+    "client": [
+      "com.springwater.easybot.platforms.fabric.FabricClientEntry"
     ]
   },
   "mixins": [

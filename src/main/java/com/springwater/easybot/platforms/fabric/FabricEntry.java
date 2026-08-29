@@ -8,6 +8,7 @@ import com.springwater.easybot.commands.EasyBotCommands;
 import com.springwater.easybot.config.ConfigLoader;
 import com.springwater.easybot.config.EasyBotConfig;
 import com.springwater.easybot.features.*;
+import com.springwater.easybot.platforms.fabric.features.ClientIpSyncFeature;
 import com.springwater.easybot.impl.BridgeBehaviorImpl;
 import com.springwater.easybot.impl.ClientProfileGetterImpl;
 import com.springwater.easybot.logger.Slf4jLoggerAdapter;
@@ -54,7 +55,8 @@ public class FabricEntry implements ModInitializer {
     private static final List<IEasyBotFeatures> features = List.of(
             new PlayerLoginFeature(),             // 玩家登陆任务(强制绑定触发器)
             new LoginEventSyncFeature(),          // 消息同步接口(进入退出)
-            new PlayerDeathSyncFeature()          // 玩家死亡任务(同步消息)
+            new PlayerDeathSyncFeature(),         // 玩家死亡任务(同步消息)
+            new ClientIpSyncFeature()             // 客户端IP上报
     );
 
     @Override

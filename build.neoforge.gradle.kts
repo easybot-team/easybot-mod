@@ -22,6 +22,13 @@ java {
     sourceCompatibility = requiredJava
 }
 
+sourceSets {
+    named("main") {
+        java.srcDir("src/client/java")
+        resources.srcDir("src/client/resources")
+    }
+}
+
 dependencies {
     compileOnly("maven.modrinth:floodgate:${property("deps.floodgate_version")}")
     shade("com.springwater.easybot:ez-statistic:${property("deps.ez_statistic_version")}") {

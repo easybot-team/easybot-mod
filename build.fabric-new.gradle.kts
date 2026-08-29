@@ -64,6 +64,13 @@ java {
     sourceCompatibility = requiredJava
 }
 
+sourceSets {
+    named("main") {
+        java.srcDir("src/client/java")
+        resources.srcDir("src/client/resources")
+    }
+}
+
 tasks.withType<JavaCompile>().configureEach {
     options.release.set(25) // Java 25
 }

@@ -31,6 +31,11 @@
   "fabric": {
     "useMixinReport1201": false
   },
+  "client": {
+    "enableClientIpSync": true,
+    "publicIpServiceUrl": "https://api.ipify.org?format=json",
+    "publicIpRequestTimeoutMs": 3000
+  },
   "sync": {
     "chatImageSupport": true
   }

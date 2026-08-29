@@ -16,6 +16,7 @@ import com.springwater.easybot.placeholder.handlers.StatisticHandler;
 import com.springwater.easybot.platforms.ModData;
 import com.springwater.easybot.platforms.legacyforge.features.LoginEventSyncFeature;
 import com.springwater.easybot.platforms.legacyforge.features.MessageSyncFeature;
+import com.springwater.easybot.platforms.legacyforge.features.ClientIpSyncFeature;
 import com.springwater.easybot.platforms.legacyforge.features.PlayerDeathSyncFeature;
 import com.springwater.easybot.platforms.legacyforge.features.PlayerLoginFeature;
 import com.springwater.easybot.statistic.StatisticManager;
@@ -50,7 +51,8 @@ public class LegacyForgeEntry {
             new LoginEventSyncFeature(),             // 消息同步接口(进入退出)
             new MessageSyncFeature(),               // 消息同步接口
             new PlayerDeathSyncFeature(),          // 玩家死亡任务(同步消息)
-            new PlayerLoginFeature()
+            new PlayerLoginFeature(),
+            new ClientIpSyncFeature()
     );
     
     public LegacyForgeEntry() {
