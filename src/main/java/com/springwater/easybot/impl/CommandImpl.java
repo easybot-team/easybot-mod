@@ -17,7 +17,9 @@ public class CommandImpl {
     public String DispatchCommand(String command) {
         var source = new CommandSourceImpl();
         var level = EasyBotModImpl.INSTANCE.getServer().overworld();
-        //? >= 1.21.11 {
+        //? >= 26.3 {
+        /*CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, net.minecraft.server.permissions.PermissionSet.ALL_PERMISSIONS, Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer());
+        *///?} else if >= 1.21.11 {
         CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, net.minecraft.server.permissions.PermissionSet.ALL_PERMISSIONS, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
         //?} else {
         /*CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, 4, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
@@ -48,7 +50,9 @@ public class CommandImpl {
         };
 
         var level = EasyBotModImpl.INSTANCE.getServer().overworld();
-        //? >= 1.21.11 {
+        //? >= 26.3 {
+        /*CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, net.minecraft.server.permissions.PermissionSet.ALL_PERMISSIONS, Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer());
+        *///?} else if >= 1.21.11 {
         CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, net.minecraft.server.permissions.PermissionSet.ALL_PERMISSIONS, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
         //?} else {
         /*CommandSourceStack stack = new CommandSourceStack(source, Vec3.ZERO, Vec2.ZERO, level, 4, "EasyBotCommandDispatcher", Component.literal("EasyBotCommandDispatcher"), EasyBotModImpl.INSTANCE.getServer(), null);
