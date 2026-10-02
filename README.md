@@ -7,6 +7,8 @@ EasyBot的Minecraft模组实现端,基于[Stonecutter](https://stonecutter.kikug
 - 使用 Gradle 任务中的 `"Set active project to ..."` 来更新 `src/` 目录下类文件可用的 Minecraft 版本。
 - 使用 `buildAndCollect` Gradle 任务将模组发布文件存储在 `build/libs/` 目录。
 
+远程命令在主线程执行完成后，会继续收集 `command.waitTime` 秒的输出（默认 3 秒），然后统一返回同步和异步结果。普通命令也会等待这段时间；设为 0 可立即返回，超过窗口的异步输出不会包含在结果中。
+
 ## 实用链接
 
 - [Stonecutter 新手指南](https://stonecutter.kikugie.dev/wiki/start/)：*提示：您必须理解其运作原理！*

@@ -1,6 +1,5 @@
 package com.springwater.easybot.impl;
 
-import lombok.Getter;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.network.chat.Component;
 
@@ -8,10 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandSourceImpl implements CommandSource {
-    @Getter
     private final List<Component> messages = new ArrayList<>();
+
+    public synchronized List<Component> getMessages() {
+        return List.copyOf(messages);
+    }
+
     @Override
-    public void sendSystemMessage(Component component) {
+    public synchronized void sendSystemMessage(Component component) {
         messages.add(component);
     }
 

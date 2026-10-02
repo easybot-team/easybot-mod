@@ -10,7 +10,7 @@ displayName = "EasyBot NeoForge"
 logoFile = "assets/${id}/logo.png"
 authors = "MiuxuE"
 description = "EasyBot for NeoForge"
-[[mixin]]
+[[mixins]]
 config = "easybot.mixins.json"
 
 [[dependencies.${ id }]]
